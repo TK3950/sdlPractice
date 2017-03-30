@@ -11,7 +11,7 @@
 #include <tchar.h>
 
 
-// TODO: rework, use a general shape class, create a type enum
+// TODO: create addition shape definitions
 
 
 class shape {
