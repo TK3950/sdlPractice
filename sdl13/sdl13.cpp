@@ -57,6 +57,15 @@ int main()
 				quit = true;
 			}
 		}
+
+		else if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+			if (e.button.button == SDL_BUTTON_RIGHT)
+			{
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You right-clicked!", screen);
+			}
+		}
+
 		SetRenderer(renderer);
 		UpdateScreen(renderer, m_surface);
 	}
