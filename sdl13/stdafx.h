@@ -12,12 +12,10 @@
 
 
 // TODO: rework, use a general shape class, create a type enum
-class shape {
-	
-};
 
 
-class rhombus : shape {
+
+class rhombus {
 public:
 	rhombus(int x, int y, int w, int h)
 		: width(w), height(h), posx(x), posy(y) {}
@@ -26,10 +24,10 @@ public:
 
 	int width, height, posx, posy;
 
-	//rhombus();
+	//~rhombus();
 };
 
-class rectangle : shape {
+class rectangle {
 public:
 	rectangle(int x, int y, int w, int h)
 		: width(w), height(h), posx(x), posy(y) {}
@@ -39,4 +37,25 @@ public:
 
 	int width, height, posx, posy;
 	//~rectangle();
+};
+
+class shape {
+
+	enum form { // bring into lower header
+		TK_RECTANGLE = 0,
+		TK_RHOMBUS,
+		TK_ELLIPSE,
+		TK_TEXT,
+		TK_LINE,
+		TK_ARROW
+	};
+
+	shape(form f, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f) {}
+
+
+public:
+	void drawShape(SDL_Renderer *r, shape *s);
+	int width, height, posx, posy;
+
+	form fo;
 };
