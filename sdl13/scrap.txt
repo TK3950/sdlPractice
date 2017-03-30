@@ -23,3 +23,14 @@ while(!quit)
 			}
 		
 	}
+
+
+
+	shape *r1 = new shape(shape::TK_RECTANGLE, 0, 0, 100, 50);
+			shapes.push_front(r1);
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You left-clicked! This adds a rectangle!", screen);
+
+			if (shapes.front()->posy > 0)
+			{
+				shapes.front()->posy = shapes.front()->posy - 1;
+			}

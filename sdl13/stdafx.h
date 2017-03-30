@@ -9,7 +9,8 @@
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include <tchar.h>
-
+#define TK_WINDOW_WIDTH 1000
+#define TK_WINDOW_HEIGHT 680
 
 // TODO: create addition shape definitions
 

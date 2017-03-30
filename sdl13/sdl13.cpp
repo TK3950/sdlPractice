@@ -6,6 +6,7 @@
 #include "stdafx.h"
 #include <list>
 #include <SDL/SDL.h>
+#include "events.h"
 #undef main
 
 
@@ -64,68 +65,7 @@ int main()
 
 	while (!quit)
 	{
-		SDL_PollEvent(&e);
-		if (e.type == SDL_KEYDOWN)
-		{
-			if (e.key.keysym.scancode == SDL_SCANCODE_Q)
-			{
-				quit = true;
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_D)
-			{
-				if (shapes.front()->posx < TK_WINDOW_WIDTH)
-				{
-					shapes.front()->posx = shapes.front()->posx + 1;
-				}
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_A)
-			{
-				if (shapes.front()->posx > 0)
-				{
-					shapes.front()->posx = shapes.front()->posx - 1;
-				}
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_S)
-			{
-				if (shapes.front()->posy < TK_WINDOW_HEIGHT)
-				{
-					shapes.front()->posy = shapes.front()->posy + 1;
-				}
-			}
-
-			if (e.key.keysym.scancode == SDL_SCANCODE_W)
-			{
-				if (shapes.front()->posy > 0)
-				{
-					shapes.front()->posy = shapes.front()->posy - 1;
-				}
-			}
-
-
-		}
-
-		else if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			if (e.button.button == SDL_BUTTON_RIGHT)
-			{
-				shape *r1 = new shape(shape::TK_RHOMBUS, 10, 10, 100, 50);
-				shapes.push_front(r1);
-				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You right-clicked! This adds a rhombus!", screen);
-				
-			}
-
-			if (e.button.button == SDL_BUTTON_LEFT)
-			{
-				shape *r1 = new shape(shape::TK_RECTANGLE, 0, 0, 100, 50);
-				shapes.push_front(r1);
-				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You left-clicked! This adds a rectangle!", screen);
-
-			}
-
-		}
+		GetEvents()
 		
 		ClearAll(renderer);
 		SetShapes(renderer, shapes);
