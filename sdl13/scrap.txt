@@ -1,0 +1,25 @@
+while(!quit)
+	{
+		renderer = SDL_CreateRenderer(screen, -1, 0); // make renderer-type object from screen, assign to renderer object
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // object, r,g,b, alpha
+		SDL_RenderClear(renderer);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // object, r,g,b, alpha
+		rhombus *rhombus1 = new rhombus(30, 30, 400, 200);
+		
+		rhombus1->drawRhombus(renderer, *rhombus1 );
+		SDL_BlitSurface(m_surface, NULL, m_surface, NULL);
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, m_surface);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer); // show
+		SDL_Delay(5);
+
+		while (SDL_PollEvent(&e) != 0)
+			if (e.type == SDL_KEYDOWN)
+			{
+				if (e.key.keysym.scancode == SDL_SCANCODE_Q)
+				{
+					quit = true;
+				}
+			}
+		
+	}
