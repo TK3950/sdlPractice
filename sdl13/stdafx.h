@@ -14,33 +14,8 @@
 // TODO: rework, use a general shape class, create a type enum
 
 
-
-class rhombus {
-public:
-	rhombus(int x, int y, int w, int h)
-		: width(w), height(h), posx(x), posy(y) {}
-
-	void drawRhombus(SDL_Renderer *r, rhombus t);
-
-	int width, height, posx, posy;
-
-	//~rhombus();
-};
-
-class rectangle {
-public:
-	rectangle(int x, int y, int w, int h)
-		: width(w), height(h), posx(x), posy(y) {}
-
-	void drawRectangle(SDL_Renderer *r, rectangle t);
-	
-
-	int width, height, posx, posy;
-	//~rectangle();
-};
-
 class shape {
-
+public:
 	enum form { // bring into lower header
 		TK_RECTANGLE = 0,
 		TK_RHOMBUS,
@@ -50,11 +25,13 @@ class shape {
 		TK_ARROW
 	};
 
-	shape(form f, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f) {}
+	shape(form f, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f){}
 
 
 public:
 	void drawShape(SDL_Renderer *r, shape *s);
+	void drawRhombus(SDL_Renderer *r, shape s);
+	void drawRectangle(SDL_Renderer *r, shape s);
 	int width, height, posx, posy;
 
 	form fo;
