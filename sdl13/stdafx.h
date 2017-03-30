@@ -11,9 +11,13 @@
 #include <tchar.h>
 
 
+// TODO: rework, use a general shape class, create a type enum
+class shape {
+	
+};
 
-// TODO: reference additional headers your program requires here
-class rhombus {
+
+class rhombus : shape {
 public:
 	rhombus(int x, int y, int w, int h)
 		: width(w), height(h), posx(x), posy(y) {}
@@ -22,5 +26,17 @@ public:
 
 	int width, height, posx, posy;
 
+	//rhombus();
+};
 
+class rectangle : shape {
+public:
+	rectangle(int x, int y, int w, int h)
+		: width(w), height(h), posx(x), posy(y) {}
+
+	void drawRectangle(SDL_Renderer *r, rectangle t);
+	
+
+	int width, height, posx, posy;
+	//~rectangle();
 };

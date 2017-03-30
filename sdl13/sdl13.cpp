@@ -2,8 +2,10 @@
 // 
 
 #include "stdafx.h"
+#include <list>
 #include <SDL/SDL.h>
 #undef main
+
 
 
 void UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
@@ -16,20 +18,32 @@ void UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
 }
 
 
-void SetRenderer(SDL_Renderer* re)
+
+void SetRhombuses(SDL_Renderer* re, std::list<rhombus*> rhombuses)
 {
+	SDL_SetRenderDrawColor(re, 0, 0, 0, 255); // object, r,g,b, alpha
+	if (!(rhombuses.empty()))
 	{
-		// calculations for objects to draw
-		SDL_SetRenderDrawColor(re, 255, 255, 255, 255); // object, r,g,b, alpha
-		SDL_RenderClear(re);
-		SDL_SetRenderDrawColor(re, 0, 0, 0, 255); // object, r,g,b, alpha
-		rhombus *rhombus1 = new rhombus(30, 30, 400, 200);
-
-		rhombus1->drawRhombus(re, *rhombus1);
+		rhombuses.front()->rhombus::drawRhombus(re, *rhombuses.front());
 	}
-
-
 }
+
+void SetRectangles(SDL_Renderer* re, std::list<rectangle*> rectangles)
+{
+
+	SDL_SetRenderDrawColor(re, 0, 0, 0, 255); // object, r,g,b, alpha
+	if (!(rectangles.empty()))
+	{
+		rectangles.front()->rectangle::drawRectangle(re, *rectangles.front());
+	}
+}
+
+void SetBackground(SDL_Renderer* re)
+{
+	SDL_SetRenderDrawColor(re, 255, 255, 255, 255); // object, r,g,b, alpha
+	SDL_RenderClear(re);
+}
+
 
 
 int main()
@@ -47,6 +61,9 @@ int main()
 	m_surface = SDL_LoadBMP("");
 	renderer = SDL_CreateRenderer(screen, -1, 0); // make renderer-type object from screen, assign to renderer object
 
+	std::list<rhombus*> rhombuses;
+	std::list<rectangle*> rectangles;
+
 	while (!quit)
 	{
 		SDL_PollEvent(&e);
@@ -62,11 +79,24 @@ int main()
 		{
 			if (e.button.button == SDL_BUTTON_RIGHT)
 			{
-				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You right-clicked!", screen);
+				rhombus *r1 = new rhombus(0, 0, 100, 50);
+				rhombuses.push_front(r1);
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You right-clicked! This adds a rhombus!", screen);
+				
 			}
-		}
 
-		SetRenderer(renderer);
+			if (e.button.button == SDL_BUTTON_LEFT)
+			{
+				rectangle *r1 = new rectangle(0, 0, 100, 50);
+				rectangles.push_front(r1);
+				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Information", "You left-clicked! This adds a rectangle!", screen);
+
+			}
+
+		}
+		SetBackground(renderer);
+		SetRhombuses(renderer, rhombuses);
+		SetRectangles(renderer, rectangles);
 		UpdateScreen(renderer, m_surface);
 	}
 	SDL_Delay(500);

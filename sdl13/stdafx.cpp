@@ -16,3 +16,11 @@ void rhombus::drawRhombus(SDL_Renderer *r, rhombus t) {
 	SDL_RenderDrawLine(r, t.posx + t.width, t.posy + t.height / 2, t.posx + t.width / 2, t.posy + t.height);
 
 }
+void rectangle::drawRectangle(SDL_Renderer *r, rectangle t) {
+
+	SDL_RenderDrawLine(r, t.posx, t.posy, t.posx + t.width, t.posy);
+	SDL_RenderDrawLine(r, t.posx, t.posy, t.posx, t.posy+t.height);
+	SDL_RenderDrawLine(r, t.posx+t.width, t.posy+t.height, t.posx+t.width, t.posy);
+	SDL_RenderDrawLine(r, t.posx+t.width, t.posy+t.height, t.posx, t.posy+t.height);
+
+}
