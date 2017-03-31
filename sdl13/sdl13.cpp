@@ -7,6 +7,7 @@
 #include <list>
 #include <SDL/SDL.h>
 #include "events.h"
+#include "tksdl.h"
 #undef main
 
 
@@ -14,14 +15,7 @@
 #define TK_WINDOW_HEIGHT 680
 
 
-void UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
-{
-	SDL_BlitSurface(surf, NULL, surf, NULL);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(re, surf);
-	SDL_RenderCopy(re, texture, NULL, NULL);
-	SDL_RenderPresent(re); // show
-	SDL_Delay(5);
-}
+
 
 
 
@@ -44,37 +38,42 @@ void ClearAll(SDL_Renderer* re)
 	SDL_RenderClear(re);
 }
 
-
-
 int main()
 {
+#pragma region Generic Variables.
 	bool quit = false;
 	bool keybuffer[SDL_NUM_SCANCODES];
 	bool mousebuffer[16];
-	SDL_Event e;
-	SDL_Surface* m_surface = NULL; // create surface object, referenced by pointer
-	SDL_Renderer* renderer = NULL; // create renderer object, reference by pointer
-	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
-	SDL_Window* screen = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
-		SDL_WINDOWPOS_UNDEFINED, // x position
-		SDL_WINDOWPOS_UNDEFINED, // y position
-		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width , height
-		SDL_WINDOW_OPENGL); // window flags
-	m_surface = SDL_LoadBMP("");
-	renderer = SDL_CreateRenderer(screen, -1, 0); // make renderer-type object from screen, assign to renderer object
-	ClearAll(renderer);
-	std::list<shape*> shapes;
+#pragma endregion
+
+
+#pragma region SDL Setup
+	SDL_Renderer* r = NULL;
+	SDL_Surface* s = NULL;
+	SDL_Window* w = NULL;
+	SDL_Event* e = NULL;
+	std::list<shape*> sh;
+	TKSCENE *scene = new TKSCENE(r,  s,  w,  e, sh);
+	
+#pragma endregion
+
+	
+	ClearAll(scene->rr);
+	shape *r1 = new shape(shape::TK_RECTANGLE, 0, 0, 100, 50);
+	scene->shapes.push_front(r1);
 
 	while (!quit)
 	{
-		GetEvents(keybuffer ,mousebuffer);
+		//GetAllEvents(keybuffer ,mousebuffer);
 		
-		ClearAll(renderer);
-		SetShapes(renderer, shapes);
-		UpdateScreen(renderer, m_surface);
+		ClearAll(scene->rr);
+		SetShapes(scene->rr, scene->shapes);
+		scene->shapes.front()->posx = scene->shapes.front()->posx + 1;
+		scene->UpdateScreen(scene->rr, scene->ss);
+		SDL_Delay(50);
 	}
 	SDL_Delay(500);
-	SDL_FreeSurface(m_surface);
+	SDL_FreeSurface(scene->ss);
 	SDL_Quit();
 
 

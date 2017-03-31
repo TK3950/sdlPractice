@@ -153,11 +153,13 @@
     <ClInclude Include="events.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="tksdl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="events.cpp" />
     <ClCompile Include="sdl13.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="tksdl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2.dll" />

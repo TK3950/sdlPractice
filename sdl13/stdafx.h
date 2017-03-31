@@ -29,7 +29,6 @@ public:
 	shape(form f, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f){}
 
 
-public:
 	void drawShape(SDL_Renderer *r, shape *s);
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
