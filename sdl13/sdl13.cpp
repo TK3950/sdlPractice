@@ -65,10 +65,10 @@ int main()
 
 	while (!quit)
 	{
-		GetEvents()
+		GetEvents(keybuffer ,mousebuffer);
 		
 		ClearAll(renderer);
-		SetShapes(renderer, shapes);
+		SetShapes(renderer, shapes)
 		UpdateScreen(renderer, m_surface);
 	}
 	SDL_Delay(500);
