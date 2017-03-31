@@ -49,6 +49,8 @@ void ClearAll(SDL_Renderer* re)
 int main()
 {
 	bool quit = false;
+	bool keybuffer[SDL_NUM_SCANCODES];
+	bool mousebuffer[16];
 	SDL_Event e;
 	SDL_Surface* m_surface = NULL; // create surface object, referenced by pointer
 	SDL_Renderer* renderer = NULL; // create renderer object, reference by pointer
@@ -68,7 +70,7 @@ int main()
 		GetEvents(keybuffer ,mousebuffer);
 		
 		ClearAll(renderer);
-		SetShapes(renderer, shapes)
+		SetShapes(renderer, shapes);
 		UpdateScreen(renderer, m_surface);
 	}
 	SDL_Delay(500);
