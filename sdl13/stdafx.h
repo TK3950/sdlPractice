@@ -6,6 +6,7 @@
 #pragma once
 
 #include "targetver.h"
+#include <math.h>
 #include <SDL/SDL.h>
 #include <stdio.h>
 #include <tchar.h>
@@ -32,6 +33,7 @@ public:
 	void drawShape(SDL_Renderer *r, shape *s);
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
+	void drawEllipse(SDL_Renderer *r, shape s);
 	int width, height, posx, posy;
 
 	form fo;

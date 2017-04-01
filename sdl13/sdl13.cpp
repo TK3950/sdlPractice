@@ -3,10 +3,9 @@
 
 // TODO: create a clean buffer for handling events, i.e. a keypress buffer
 
-#include "stdafx.h"
+
 #include <list>
 #include <SDL/SDL.h>
-#include "events.h"
 #include "tksdl.h"
 #undef main
 
@@ -16,7 +15,7 @@
 
 
 
-
+extern bool TK_QUIT = false;
 
 
 void SetShapes(SDL_Renderer* re, std::list<shape*> shapes) // Simple method to render all shapes in a non-empty list
@@ -40,37 +39,36 @@ void ClearAll(SDL_Renderer* re)
 
 int main()
 {
-#pragma region Generic Variables.
-	bool quit = false;
-	bool keybuffer[SDL_NUM_SCANCODES];
-	bool mousebuffer[16];
-#pragma endregion
+
 
 
 #pragma region SDL Setup
 	SDL_Renderer* r = NULL;
 	SDL_Surface* s = NULL;
 	SDL_Window* w = NULL;
-	SDL_Event* e = NULL;
+	SDL_Event e;
 	std::list<shape*> sh;
-	TKSCENE *scene = new TKSCENE(r,  s,  w,  e, sh);
+	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh);
 	
 #pragma endregion
 
 	
 	ClearAll(scene->rr);
-	shape *r1 = new shape(shape::TK_RECTANGLE, 0, 0, 100, 50);
-	scene->shapes.push_front(r1);
+	SetShapes(scene->rr, scene->shapes);
+	scene->UpdateScreen(scene->rr, scene->ss); // first setup
 
-	while (!quit)
+	while (!TK_QUIT)
 	{
-		//GetAllEvents(keybuffer ,mousebuffer);
+		int response = GetAllEvents(scene);
+		TK_QUIT = (response == 20) ? true : false;
 		
-		ClearAll(scene->rr);
-		SetShapes(scene->rr, scene->shapes);
-		scene->shapes.front()->posx = scene->shapes.front()->posx + 1;
-		scene->UpdateScreen(scene->rr, scene->ss);
-		SDL_Delay(50);
+		if (response != 0)
+		{
+			ClearAll(scene->rr);
+			SetShapes(scene->rr, scene->shapes);
+			scene->UpdateScreen(scene->rr, scene->ss); // we should only call if something changed
+			SDL_Delay(5); // just a small thread delay, remove if it gets slow
+		}
 	}
 	SDL_Delay(500);
 	SDL_FreeSurface(scene->ss);
