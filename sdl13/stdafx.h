@@ -14,8 +14,6 @@
 #define TK_WINDOW_HEIGHT 680
 
 // TODO: create addition shape definitions
-
-
 class shape {
 public:
 	enum form { // bring into lower header
@@ -34,6 +32,8 @@ public:
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
 	void drawEllipse(SDL_Renderer *r, shape s);
+
+	
 	int width, height, posx, posy;
 
 	form fo;

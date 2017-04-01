@@ -55,20 +55,21 @@ int main()
 	
 	ClearAll(scene->rr);
 	SetShapes(scene->rr, scene->shapes);
-	scene->UpdateScreen(scene->rr, scene->ss); // first setup
+	scene->UpdateScreen(scene->rr, scene->ss); // first display
 
 	while (!TK_QUIT)
 	{
 		int response = GetAllEvents(scene);
 		TK_QUIT = (response == 20) ? true : false;
 		
-		if (response != 0)
+		if (true) // find a way to call this only when needed. i.e. when the scene has changed
 		{
 			ClearAll(scene->rr);
 			SetShapes(scene->rr, scene->shapes);
 			scene->UpdateScreen(scene->rr, scene->ss); // we should only call if something changed
 			SDL_Delay(5); // just a small thread delay, remove if it gets slow
 		}
+
 	}
 	SDL_Delay(500);
 	SDL_FreeSurface(scene->ss);

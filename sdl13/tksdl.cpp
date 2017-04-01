@@ -1,5 +1,6 @@
+#pragma once
 #include "tksdl.h"
-
+#include "events.h"
 
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::list<shape*> sh)
 {
@@ -10,7 +11,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width , height
 		SDL_WINDOW_OPENGL); // window flags
 
-	s = SDL_LoadBMP(""); // empty path means we don't load an image, we get a clean slate. also returns null
+	//s = SDL_LoadBMP(""); // empty path means we don't load an image, we get a clean slate. also returns null, so functionally useless.
 	r = SDL_CreateRenderer(w, -1, 0); // make renderer-type object from screen, assign to renderer object
 	rr = r;
 	ss = s;
@@ -26,13 +27,17 @@ void TKSCENE::UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(re, surf);
 	SDL_RenderCopy(re, texture, NULL, NULL);
 	SDL_RenderPresent(re); // show
-	SDL_Delay(5);
 }
+
+
+
+
 
 int GetAllEvents(TKSCENE* scene)
 {
 	while (SDL_PollEvent(scene->ee))
 	{
+
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1)
 		{
 			scene->shapes.push_front(new shape(shape::TK_RHOMBUS, 0, 0, 100, 50));
