@@ -67,7 +67,6 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 		SDL_RenderDrawPoint(r, t.posx - x + a, t.posy + y + b);
 	}
 
-
 	
 	
 

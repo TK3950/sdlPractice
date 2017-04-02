@@ -35,29 +35,75 @@ void TKSCENE::UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
 
 int GetAllEvents(TKSCENE* scene)
 {
-	while (SDL_PollEvent(scene->ee))
+	while (SDL_PollEvent(scene->ee) != 0)
 	{
+#ifdef _DEBUG
+		if (scene->ee->key.state == SDL_PRESSED)
+		{
+			printf("Pressed on %d\n", scene->ee->key.keysym.scancode);
+		}
+		if (scene->ee->button.state == SDL_PRESSED)
+		{
+			
+			if (scene->ee->button.button == SDLK_RIGHT) printf("Right click pressed\n");
+			else if(scene->ee->button.button == SDLK_LEFT) printf("Left click pressed\n");
+		}
+		printf("Motion Type = %d\tX = %d, Y = %d\n", scene->ee->motion.type, scene->ee->motion.x, scene->ee->motion.y);
+#endif
 
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1)
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1 && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.push_front(new shape(shape::TK_RHOMBUS, 0, 0, 100, 50));
-			return SDL_SCANCODE_1;
+			return scene->ee->key.keysym.scancode;
 		}
-
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_2)
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_2 && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.push_front(new shape(shape::TK_RECTANGLE, 0, 0, 100, 50));
-			return SDL_SCANCODE_2;
+			return scene->ee->key.keysym.scancode;
 		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_3)
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_3 && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.push_front(new shape(shape::TK_ELLIPSE, 0, 0, 100, 50));
-			return SDL_SCANCODE_2;
+			return scene->ee->key.keysym.scancode;
 		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q)
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q && scene->ee->key.state == SDL_PRESSED)
 		{
-			return SDL_SCANCODE_Q;
+			return scene->ee->key.keysym.scancode;
 		}
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_W && scene->ee->key.state == SDL_PRESSED)
+		{
+			if (scene->shapes.front()->posy > 0)
+			{
+				scene->shapes.front()->posy = scene->shapes.front()->posy - 1;
+			}
+			return scene->ee->key.keysym.scancode;
+		}
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_S && scene->ee->key.state == SDL_PRESSED)
+		{
+			if (scene->shapes.front()->posy < TK_WINDOW_HEIGHT)
+			{
+				scene->shapes.front()->posy = scene->shapes.front()->posy + 1;
+			}
+			return scene->ee->key.keysym.scancode;
+		}
+
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_A && scene->ee->key.state == SDL_PRESSED)
+		{
+			if (scene->shapes.front()->posx > 0)
+			{
+				scene->shapes.front()->posx = scene->shapes.front()->posx - 1;
+			}
+			return scene->ee->key.keysym.scancode;
+		}
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_D && scene->ee->key.state == SDL_PRESSED)
+		{
+			if (scene->shapes.front()->posx < TK_WINDOW_WIDTH)
+			{
+				scene->shapes.front()->posx = scene->shapes.front()->posx + 1;
+			}
+			return scene->ee->key.keysym.scancode;
+		}
+
 	}
 	return 0;
 }

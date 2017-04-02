@@ -62,7 +62,7 @@ int main()
 		int response = GetAllEvents(scene);
 		TK_QUIT = (response == 20) ? true : false;
 		
-		if (true) // find a way to call this only when needed. i.e. when the scene has changed
+		if (response != 0) // find a way to call this only when needed. i.e. when the scene has changed
 		{
 			ClearAll(scene->rr);
 			SetShapes(scene->rr, scene->shapes);
