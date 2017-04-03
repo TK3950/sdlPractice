@@ -52,6 +52,14 @@ void SetShapes(SDL_Renderer* re, std::vector<shape*> shapes) // Simple method to
 
 }
 
+void SetMenus(SDL_Renderer* re, std::vector<menu*> menus)
+{
+	if (!menus.empty())
+	{
+		menus.front()->drawDropDown(re, menus.front()->posx, menus.front()->posy, menus.front()->width, menus.front()->height);
+	}
+}
+
 void ClearAll(SDL_Renderer* re)
 {
 	SDL_SetRenderDrawColor(re, 255, 255, 255, 255); // object, r,g,b, alpha
@@ -89,6 +97,7 @@ int main()
 		{
 			ClearAll(scene->rr);
 			SetShapes(scene->rr, scene->shapes);
+			SetMenus(scene->rr, scene->menus);
 			scene->UpdateScreen(scene->rr, scene->ss); // we should only call if something changed
 			SDL_Delay(5); // just a small thread delay, remove if it gets slow
 		}

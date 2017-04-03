@@ -18,6 +18,7 @@ public:
 	SDL_Window*		ww;
 	SDL_Event*		ee;
 	std::vector<shape*> shapes;
+	std::vector<menu*> menus;
 };
 
 int GetAllEvents(TKSCENE* scene);

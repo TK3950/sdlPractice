@@ -71,3 +71,23 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 	
 
 }
+
+void menu::drawDropDown(SDL_Renderer* r, int x, int y, int w, int h)
+{
+	
+
+	SDL_RenderDrawLine(r, x, y, x + w, y);
+	SDL_RenderDrawLine(r, x, y, x, y + h);
+	SDL_RenderDrawLine(r, x + w, y + h, x + w, y);
+	SDL_RenderDrawLine(r, x + w, y + h, x, y + h);
+	for (int lx = x + 1; lx < x+w; ++lx)
+	{
+		for (int ly = y + 1; ly < y+h; ++ly)
+		{
+			SDL_SetRenderDrawColor(r, 200, 200, 200, 200);
+			SDL_RenderDrawPoint(r, lx, ly );
+		}
+	}
+	SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+	
+}
