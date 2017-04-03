@@ -56,7 +56,7 @@ int main()
 	ClearAll(scene->rr);
 	SetShapes(scene->rr, scene->shapes);
 	scene->UpdateScreen(scene->rr, scene->ss); // first display
-
+	
 	while (!TK_QUIT)
 	{
 		int response = GetAllEvents(scene);

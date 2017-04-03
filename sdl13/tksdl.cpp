@@ -38,17 +38,17 @@ int GetAllEvents(TKSCENE* scene)
 	while (SDL_PollEvent(scene->ee) != 0)
 	{
 #ifdef _DEBUG
-		if (scene->ee->key.state == SDL_PRESSED)
-		{
-			printf("Pressed on %d\n", scene->ee->key.keysym.scancode);
-		}
-		if (scene->ee->button.state == SDL_PRESSED)
-		{
-			
-			if (scene->ee->button.button == SDLK_RIGHT) printf("Right click pressed\n");
-			else if(scene->ee->button.button == SDLK_LEFT) printf("Left click pressed\n");
-		}
-		printf("Motion Type = %d\tX = %d, Y = %d\n", scene->ee->motion.type, scene->ee->motion.x, scene->ee->motion.y);
+		int keystate = scene->ee->key.state;
+		int keycode = scene->ee->key.keysym.scancode;
+		int buttonstate = scene->ee->button.state;
+		int button = scene->ee->button.button;
+		int motiontype = scene->ee->motion.type;
+		int mousex = scene->ee->motion.x;
+		int mousey = scene->ee->motion.y;
+		printf("=========================================================================\n");
+		printf("Keystate = %d\t\t Keycode = %d\n",keystate,keycode);
+		printf("Mouse state = %d\t\t Mouse button = %d\n", buttonstate, button);
+		printf("Motion type = %d\t Mouse x = %d\t Mouse y = %d\n", motiontype, mousex, mousey);
 #endif
 
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1 && scene->ee->key.state == SDL_PRESSED)
@@ -72,7 +72,7 @@ int GetAllEvents(TKSCENE* scene)
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_W && scene->ee->key.state == SDL_PRESSED)
 		{
-			if (scene->shapes.front()->posy > 0)
+			if (scene->shapes.front()->posy > 0 && !(scene->shapes.empty()))
 			{
 				scene->shapes.front()->posy = scene->shapes.front()->posy - 1;
 			}
@@ -80,7 +80,7 @@ int GetAllEvents(TKSCENE* scene)
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_S && scene->ee->key.state == SDL_PRESSED)
 		{
-			if (scene->shapes.front()->posy < TK_WINDOW_HEIGHT)
+			if (scene->shapes.front()->posy < TK_WINDOW_HEIGHT && !(scene->shapes.empty()))
 			{
 				scene->shapes.front()->posy = scene->shapes.front()->posy + 1;
 			}
@@ -89,7 +89,7 @@ int GetAllEvents(TKSCENE* scene)
 
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_A && scene->ee->key.state == SDL_PRESSED)
 		{
-			if (scene->shapes.front()->posx > 0)
+			if (scene->shapes.front()->posx > 0 && !(scene->shapes.empty()))
 			{
 				scene->shapes.front()->posx = scene->shapes.front()->posx - 1;
 			}
@@ -97,11 +97,30 @@ int GetAllEvents(TKSCENE* scene)
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_D && scene->ee->key.state == SDL_PRESSED)
 		{
-			if (scene->shapes.front()->posx < TK_WINDOW_WIDTH)
+			if (scene->shapes.front()->posx < TK_WINDOW_WIDTH && !(scene->shapes.empty()))
 			{
 				scene->shapes.front()->posx = scene->shapes.front()->posx + 1;
 			}
 			return scene->ee->key.keysym.scancode;
+		}
+
+		if (scene->ee->button.button == SDL_BUTTON_LEFT && scene->ee->button.state == SDL_PRESSED)
+		{
+			if (scene->ee->motion.x < scene->shapes.front()->posx + scene->shapes.front()->width)
+			{
+				if (scene->ee->motion.x > scene->shapes.front()->posx)
+				{
+					if (scene->ee->motion.x > scene->shapes.front()->posy + scene->shapes.front()->height)
+					{
+						if (scene->ee->motion.x > scene->shapes.front()->posy)
+						{
+							// fix this for more than just the top shape
+							// we want the top shape whose bounding box we are in
+						}
+					}
+				}
+
+			}
 		}
 
 	}
