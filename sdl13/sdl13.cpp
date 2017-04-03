@@ -18,14 +18,35 @@
 extern bool TK_QUIT = false;
 
 
-void SetShapes(SDL_Renderer* re, std::list<shape*> shapes) // Simple method to render all shapes in a non-empty list
+void SetShapes(SDL_Renderer* re, std::vector<shape*> shapes) // Simple method to render all shapes in a non-empty list
 {
 	SDL_SetRenderDrawColor(re, 0, 0, 0, 255); // object, r,g,b, alpha
 	if (!(shapes.empty()))
 	{
-		for (std::list<shape*>::iterator it = shapes.begin(); it != shapes.end(); ++it)
+		for (unsigned int i = 0; i < shapes.size(); ++i)
 		{
-			shapes.front()->shape::drawShape(re, *it);
+			// look for shapes that escape our bounds
+
+			if (shapes.at(i)->posx < 0)
+			{
+				shapes.at(i)->posx = 0;
+			}
+			if (shapes.at(i)->posx+shapes.at(i)->width > TK_WINDOW_WIDTH)
+			{
+				shapes.at(i)->posx = TK_WINDOW_WIDTH - shapes.at(i)->width;
+			}
+
+			if (shapes.at(i)->posy < 0)
+			{
+				shapes.at(i)->posy = 0;
+			}
+			if (shapes.at(i)->posy + shapes.at(i)->height > TK_WINDOW_HEIGHT)
+			{
+				shapes.at(i)->posy = TK_WINDOW_HEIGHT - shapes.at(i)->height;
+			}
+
+
+			shapes.front()->shape::drawShape(re, shapes.at(i)); // draw current shape into renderer
 		}
 	}
 
@@ -47,7 +68,7 @@ int main()
 	SDL_Surface* s = NULL;
 	SDL_Window* w = NULL;
 	SDL_Event e;
-	std::list<shape*> sh;
+	std::vector<shape*> sh;
 	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh);
 	
 #pragma endregion
@@ -62,7 +83,9 @@ int main()
 		int response = GetAllEvents(scene);
 		TK_QUIT = (response == 20) ? true : false;
 		
-		if (response != 0) // find a way to call this only when needed. i.e. when the scene has changed
+
+		// consider making all re-render events return odd, and all no-render events return even, then check event response
+		if (response != 0) 
 		{
 			ClearAll(scene->rr);
 			SetShapes(scene->rr, scene->shapes);

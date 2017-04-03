@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifndef _STDAFX_H
+#define _STDAFX_H
 #include "targetver.h"
 #include <math.h>
 #include <SDL/SDL.h>
@@ -38,3 +40,5 @@ public:
 
 	form fo;
 };
+
+#endif
