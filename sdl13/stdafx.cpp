@@ -9,8 +9,9 @@
 // and not in this file
 
 
-void shape::drawShape(SDL_Renderer *r, shape *s)
+void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 {
+	SDL_SetRenderDrawColor(r, c->r, c->g, c->b, c->a);
 	if (s->fo == TK_RHOMBUS)
 	{
 		drawRhombus(r, *s);

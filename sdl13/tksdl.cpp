@@ -5,7 +5,7 @@
 bool dragMode;
 int selectedShape;
 
-TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh)
+TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
 	w = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
@@ -21,6 +21,8 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	ww = w;
 	ee = e;
 	shapes = sh;
+	PrimaryColor = pc;
+	SecondaryColor = sc;
 
 }
 
@@ -42,7 +44,7 @@ int GetAllEvents(TKSCENE* scene)
 	{
 		int mousex = scene->ee->motion.x;
 		int mousey = scene->ee->motion.y;
-#ifdef _DEBUG2
+#ifdef _DEBUG
 		int keystate = scene->ee->key.state;
 		int keycode = scene->ee->key.keysym.scancode;
 		int buttonstate = scene->ee->button.state;
@@ -57,17 +59,17 @@ int GetAllEvents(TKSCENE* scene)
 
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_RHOMBUS, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_RHOMBUS, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_2 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_RECTANGLE, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_RECTANGLE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_3 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q && scene->ee->key.state == SDL_PRESSED)
@@ -93,6 +95,7 @@ int GetAllEvents(TKSCENE* scene)
 									dragMode = true;
 									// the cursor clicked inside the bounds of the shape
 									selectedShape = i; // last shape within bounds
+									printf("Grab\n");
 								}
 							}
 						}
@@ -120,7 +123,6 @@ int GetAllEvents(TKSCENE* scene)
 				"Detected right-click. This method is currently being developed.\n",
 				scene->ww);
 #endif
-			scene->menus.push_back(new menu(scene->ee->motion.x, scene->ee->motion.y, 50, 50));
 			return 418;
 			
 		}
