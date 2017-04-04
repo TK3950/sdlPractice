@@ -101,7 +101,7 @@ int main()
 			ClearAll(scene->rr);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->shapes);
 			scene->UpdateScreen(scene->rr, scene->ss); // we should only call if something changed
-			SDL_Delay(5); // just a small thread delay, remove if it gets slow
+			//SDL_Delay(5); // just a small thread delay, remove if it gets slow
 		}
 
 	}

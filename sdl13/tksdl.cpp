@@ -3,6 +3,7 @@
 #include "events.h"
 
 bool dragMode;
+bool editMode;
 int selectedShape;
 
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, color* pc, color* sc)
@@ -42,8 +43,8 @@ int GetAllEvents(TKSCENE* scene)
 {
 	while (SDL_PollEvent(scene->ee) != 0)
 	{
-		int mousex = scene->ee->motion.x;
-		int mousey = scene->ee->motion.y;
+		int mousex = scene->ee->motion.xrel;
+		int mousey = scene->ee->motion.yrel;
 #ifdef _DEBUG
 		int keystate = scene->ee->key.state;
 		int keycode = scene->ee->key.keysym.scancode;
@@ -52,7 +53,7 @@ int GetAllEvents(TKSCENE* scene)
 		int motiontype = scene->ee->motion.type;
 
 		printf("=========================================================================\n");
-		printf("Keystate = %d\t\t Keycode = %d\n",keystate,keycode);
+		printf("Keystate = %d\t\t Keycode = %d\t\tPRESSED = %d\n",keystate,keycode,scene->ee->button.state);
 		printf("Mouse state = %d\t\t Mouse button = %d\n", buttonstate, button);
 		printf("Motion type = %d\t Mouse x = %d\t Mouse y = %d\n", motiontype, mousex, mousey);
 #endif
@@ -102,11 +103,14 @@ int GetAllEvents(TKSCENE* scene)
 					}
 				}
 			}
-			if (dragMode && !scene->shapes.empty() && abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
+			if (dragMode && !scene->shapes.empty() ) 
 			{
 				scene->shapes.push_back(scene->shapes.at(selectedShape));
-				scene->shapes.back()->posx += scene->ee->motion.xrel;
-				scene->shapes.back()->posy += scene->ee->motion.yrel;
+				if (abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
+				{
+					scene->shapes.back()->posx += scene->ee->motion.xrel;
+					scene->shapes.back()->posy += scene->ee->motion.yrel;
+				}
 			}
 			return 418;
 		}
@@ -115,16 +119,51 @@ int GetAllEvents(TKSCENE* scene)
 			dragMode = false;
 		}
 
-		if (scene->ee->button.button == SDL_BUTTON_RIGHT && scene->ee->button.state == SDL_PRESSED)
+		if (scene->ee->button.button == SDL_BUTTON_RIGHT)
 		{
-#ifdef _DEBUG2
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-				"Information",
-				"Detected right-click. This method is currently being developed.\n",
-				scene->ww);
-#endif
+			if (scene->ee->button.state == SDL_PRESSED)
+			{
+				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+				{
+					if (scene->ee->motion.x < scene->shapes.at(i)->posx + scene->shapes.at(i)->width && !scene->shapes.empty())
+					{
+						if (scene->ee->motion.x > scene->shapes.at(i)->posx)
+						{
+							if (scene->ee->motion.y < scene->shapes.at(i)->posy + scene->shapes.at(i)->height)
+							{
+								if (scene->ee->motion.y > scene->shapes.at(i)->posy)
+								{
+									editMode = true;
+									// the cursor clicked inside the bounds of the shape
+									selectedShape = i; // last shape within bounds
+									printf("Edit\n");
+								}
+							}
+						}
+					}
+				}
+			}
 			return 418;
+		}
+																				// consider #define'ing
+		if (scene->ee->button.button == 4 && editMode && !scene->shapes.empty()) // right click held + drag is 4 instead of 3
+		{
+			scene->shapes.push_back(scene->shapes.at(selectedShape));
+			printf("--%d--\n", abs(scene->ee->motion.xrel));
+			if (abs(scene->ee->motion.xrel) < 1000)
+			{
+				scene->shapes.back()->width += scene->ee->motion.xrel;
+				scene->shapes.back()->height += scene->ee->motion.yrel;
+				printf("editting");
+				return 422;
+			}
 			
+		}
+		
+		
+		if (scene->ee->button.button != SDL_BUTTON_RIGHT && scene->ee->button.button != 4)
+		{
+			editMode = false;
 		}
 
 
