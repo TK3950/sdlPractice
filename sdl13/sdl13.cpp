@@ -7,6 +7,7 @@
 #include <list>
 #include <SDL/SDL.h>
 #include "tksdl.h"
+#include <windows.h>
 #undef main
 
 
@@ -18,15 +19,16 @@
 extern bool TK_QUIT = false;
 
 
-void SetShapes(SDL_Renderer* re, std::vector<shape*> shapes) // Simple method to render all shapes in a non-empty list
+
+void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes) // Simple method to render all shapes in a non-empty list
 {
-	SDL_SetRenderDrawColor(re, 0, 0, 0, 255); // object, r,g,b, alpha
+	
 	if (!(shapes.empty()))
 	{
 		for (unsigned int i = 0; i < shapes.size(); ++i)
 		{
 			// look for shapes that escape our bounds
-
+			// and return them to within the bounds
 			if (shapes.at(i)->posx < 0)
 			{
 				shapes.at(i)->posx = 0;
@@ -45,17 +47,25 @@ void SetShapes(SDL_Renderer* re, std::vector<shape*> shapes) // Simple method to
 				shapes.at(i)->posy = TK_WINDOW_HEIGHT - shapes.at(i)->height;
 			}
 
-
-			shapes.front()->shape::drawShape(re, shapes.at(i)); // draw current shape into renderer
+			if (i + 1 == shapes.size())
+			{
+				shapes.front()->shape::drawShape(re, ac, shapes.at(i)); // draw current shape into renderer
+			}
+			else
+			{
+				shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw current shape into renderer
+			}
 		}
 	}
 
 }
 
-void ClearAll(SDL_Renderer* re)
+
+void ClearAll(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes)
 {
-	SDL_SetRenderDrawColor(re, 255, 255, 255, 255); // object, r,g,b, alpha
+	SDL_SetRenderDrawColor(re, 255, 255, 255, 255);
 	SDL_RenderClear(re);
+
 }
 
 int main()
@@ -69,13 +79,16 @@ int main()
 	SDL_Window* w = NULL;
 	SDL_Event e;
 	std::vector<shape*> sh;
-	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh);
+	color* pc = new color(0, 0, 0, 255);
+	color* sc = new color(255, 255, 255, 255);
+	color* ac = new color(200, 20, 20, 255);
+	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh, pc, sc);
 	
 #pragma endregion
-
-	
-	ClearAll(scene->rr);
-	SetShapes(scene->rr, scene->shapes);
+	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
+	SDL_RenderClear(r);
+	ClearAll(scene->rr, pc, sc, ac, scene->shapes);
+	SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 	scene->UpdateScreen(scene->rr, scene->ss); // first display
 	
 	while (!TK_QUIT)
@@ -87,10 +100,10 @@ int main()
 		// consider making all re-render events return odd, and all no-render events return even, then check event response
 		if (response != 0) 
 		{
-			ClearAll(scene->rr);
-			SetShapes(scene->rr, scene->shapes);
-			scene->UpdateScreen(scene->rr, scene->ss); // we should only call if something changed
-			SDL_Delay(5); // just a small thread delay, remove if it gets slow
+			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
+			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
+			scene->UpdateScreen(scene->rr, scene->ss); // first display
+			//SDL_Delay(5); // just a small thread delay, remove if it gets slow
 		}
 
 	}

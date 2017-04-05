@@ -3,9 +3,10 @@
 #include "events.h"
 
 bool dragMode;
+bool editMode;
 int selectedShape;
 
-TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh)
+TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
 	w = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
@@ -21,6 +22,8 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	ww = w;
 	ee = e;
 	shapes = sh;
+	PrimaryColor = pc;
+	SecondaryColor = sc;
 
 }
 
@@ -40,71 +43,43 @@ int GetAllEvents(TKSCENE* scene)
 {
 	while (SDL_PollEvent(scene->ee) != 0)
 	{
-		
-#ifdef _DEBUG
+		int mousex = scene->ee->motion.xrel;
+		int mousey = scene->ee->motion.yrel;
+#ifdef _DEBUG2
 		int keystate = scene->ee->key.state;
 		int keycode = scene->ee->key.keysym.scancode;
 		int buttonstate = scene->ee->button.state;
 		int button = scene->ee->button.button;
 		int motiontype = scene->ee->motion.type;
-		int mousex = scene->ee->motion.xrel;
-		int mousey = scene->ee->motion.yrel;
+
 		printf("=========================================================================\n");
-		printf("Keystate = %d\t\t Keycode = %d\n",keystate,keycode);
+		printf("Keystate = %d\t\t Keycode = %d\t\tPRESSED = %d\n",keystate,keycode,scene->ee->button.state);
 		printf("Mouse state = %d\t\t Mouse button = %d\n", buttonstate, button);
 		printf("Motion type = %d\t Mouse x = %d\t Mouse y = %d\n", motiontype, mousex, mousey);
 #endif
 
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_RHOMBUS, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_RHOMBUS, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_2 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_RECTANGLE, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_RECTANGLE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_3 && scene->ee->key.state == SDL_PRESSED)
 		{
-			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, 0, 0, 100, 50));
+			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q && scene->ee->key.state == SDL_PRESSED)
 		{
 			return scene->ee->key.keysym.scancode;
 		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_W && scene->ee->key.state == SDL_PRESSED)
+		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_DELETE && scene->ee->key.state == SDL_PRESSED)
 		{
-			if (scene->shapes.front()->posy > 0 && !(scene->shapes.empty()))
-			{
-				scene->shapes.front()->posy = scene->shapes.front()->posy - 1;
-			}
-			return scene->ee->key.keysym.scancode;
-		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_S && scene->ee->key.state == SDL_PRESSED)
-		{
-			if (scene->shapes.front()->posy < TK_WINDOW_HEIGHT && !(scene->shapes.empty()))
-			{
-				scene->shapes.front()->posy = scene->shapes.front()->posy + 1;
-			}
-			return scene->ee->key.keysym.scancode;
-		}
-
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_A && scene->ee->key.state == SDL_PRESSED)
-		{
-			if (scene->shapes.front()->posx > 0 && !(scene->shapes.empty()))
-			{
-				scene->shapes.front()->posx = scene->shapes.front()->posx - 1;
-			}
-			return scene->ee->key.keysym.scancode;
-		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_D && scene->ee->key.state == SDL_PRESSED)
-		{
-			if (scene->shapes.front()->posx < TK_WINDOW_WIDTH && !(scene->shapes.empty()))
-			{
-				scene->shapes.front()->posx = scene->shapes.front()->posx + 1;
-			}
+			scene->shapes.pop_back();
 			return scene->ee->key.keysym.scancode;
 		}
 
@@ -124,33 +99,87 @@ int GetAllEvents(TKSCENE* scene)
 								{
 									dragMode = true;
 									// the cursor clicked inside the bounds of the shape
-									
 									selectedShape = i; // last shape within bounds
-									printf("START DRAG\n");
-									
 								}
 							}
 						}
 					}
 				}
 			}
-			printf("----%d,%d,%d,%d\n",dragMode,selectedShape, scene->ee->motion.xrel, scene->ee->motion.yrel);
-			if (dragMode && selectedShape >= 0 &&  abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
+			if (dragMode && !scene->shapes.empty() ) 
 			{
-				printf("DRAGGING\n");
-				scene->shapes.at(selectedShape)->posx += scene->ee->motion.xrel;
-				scene->shapes.at(selectedShape)->posy += scene->ee->motion.yrel;
+				scene->shapes.push_back(scene->shapes.at(selectedShape));
+				if (abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
+				{
+					scene->shapes.back()->posx += scene->ee->motion.xrel;
+					scene->shapes.back()->posy += scene->ee->motion.yrel;
+				}
 			}
 			return 418;
 		}
 		else
 		{
-			printf("NOT DRAGGING\n");
 			dragMode = false;
+		}
+
+		if (scene->ee->button.button == SDL_BUTTON_RIGHT)
+		{
+			if (scene->ee->button.state == SDL_PRESSED)
+			{
+				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+				{
+					if (scene->ee->motion.x < scene->shapes.at(i)->posx + scene->shapes.at(i)->width && !scene->shapes.empty())
+					{
+						if (scene->ee->motion.x > scene->shapes.at(i)->posx)
+						{
+							if (scene->ee->motion.y < scene->shapes.at(i)->posy + scene->shapes.at(i)->height)
+							{
+								if (scene->ee->motion.y > scene->shapes.at(i)->posy)
+								{
+									editMode = true;
+									// the cursor clicked inside the bounds of the shape
+									selectedShape = i; // last shape within bounds
+								}
+							}
+						}
+					}
+				}
+			}
 			return 418;
+		}
+																				// consider #define'ing
+		if (scene->ee->button.button == 4 && editMode && !scene->shapes.empty()) // right click held + drag is 4 instead of 3
+		{
+			scene->shapes.push_back(scene->shapes.at(selectedShape));
+			if (abs(scene->ee->motion.xrel) < 1000)
+			{
+				scene->shapes.back()->width += scene->ee->motion.xrel;
+				scene->shapes.back()->height += scene->ee->motion.yrel;
+				// unfortunately, we need to protect against negatives
+				if (scene->shapes.back()->width < 10)
+				{
+					scene->shapes.back()->width = 10;
+				}
+				if (scene->shapes.back()->height < 10)
+				{
+					scene->shapes.back()->height = 10;
+				}
+				return 422;
+			}
+			
+		}
+		
+		
+		if (scene->ee->button.button != SDL_BUTTON_RIGHT && scene->ee->button.button != 4)
+		{
+			editMode = false;
 		}
 
 
+
 	}
-	return 0;
+
+
+
+	return 0; 
 }

@@ -16,28 +16,51 @@
 #define TK_WINDOW_HEIGHT 680
 
 // TODO: create addition shape definitions
+
+class menu {
+public:
+	menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h) {}
+	void drawDropDown(SDL_Renderer *r, int x, int y, int w, int h);
+
+	int posx;
+	int posy;
+	int width;
+	int height;
+};
+
+class color {
+public:
+	color(int red, int green, int blue, int alpha) : r(red), g(green), b(blue), a(alpha) {}
+	int r;
+	int g;
+	int b;
+	int a;
+};
+
 class shape {
 public:
-	enum form { // bring into lower header
+	enum form {
 		TK_RECTANGLE = 0,
 		TK_RHOMBUS,
 		TK_ELLIPSE,
 		TK_TEXT,
 		TK_LINE,
-		TK_ARROW
+		TK_ARROW,
+		TK_MENU
 	};
 
-	shape(form f, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f){}
+	shape(form f, color* c, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f), co(c){}
 
 
-	void drawShape(SDL_Renderer *r, shape *s);
+	void drawShape(SDL_Renderer *r, color *c, shape *s);
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
 	void drawEllipse(SDL_Renderer *r, shape s);
+	
 
 	
 	int width, height, posx, posy;
-
+	color* co;
 	form fo;
 };
 
