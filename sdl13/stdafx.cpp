@@ -48,27 +48,38 @@ void shape::drawRectangle(SDL_Renderer *r, shape t) {
 void shape::drawEllipse(SDL_Renderer *r, shape t) {
 	double a = t.width / 2;
 	double b = t.height / 2;
-	double last_deviance = 0;
 	SDL_RenderDrawPoint(r, t.posx + a, t.posy);
 	SDL_RenderDrawPoint(r, t.posx + a, t.posy + (b*2));
 	SDL_RenderDrawPoint(r, t.posx , t.posy + b);
 	SDL_RenderDrawPoint(r, t.posx + (a * 2), t.posy +b);
+	int lastx = -t.width;
+	int lasty = 0;
 
-
-	for (int x = -t.width; x <= t.width; x++)
+	for (int x = -t.width; x <= t.width; x+=t.width/6)
 	{
-		int y = round(sqrt((b*b)*(1 - ((x*x) / (a*a)))));
-		SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
-		SDL_RenderDrawPoint(r, t.posx + x + a, t.posy - y + b);
+		
+		{
+			int y = round(sqrt((b*b)*(1 - ((x*x) / (a*a)))));
+			
+			//SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
+			//SDL_RenderDrawPoint(r, t.posx + x + a, t.posy - y + b);
+		}
 	}
+
+#ifdef DONOTDEFINE
 	for (int y = -t.height; y <= t.height; y++)
 	{
-		int x = round(sqrt((a*a)*(1 - ((y*y) / (b*b)))));
-		SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
-		SDL_RenderDrawPoint(r, t.posx - x + a, t.posy + y + b);
-	}
+		
+		//if (y % 2 == 0)
+		{
 
+			int x = round(sqrt((a*a)*(1 - ((y*y) / (b*b)))));
+			SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
+			SDL_RenderDrawPoint(r, t.posx - x + a, t.posy + y + b);
+		}
+	}
 	
+#endif
 	
 
 }

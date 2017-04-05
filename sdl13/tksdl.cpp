@@ -155,6 +155,15 @@ int GetAllEvents(TKSCENE* scene)
 			{
 				scene->shapes.back()->width += scene->ee->motion.xrel;
 				scene->shapes.back()->height += scene->ee->motion.yrel;
+				// unfortunately, we need to protect against negatives
+				if (scene->shapes.back()->width < 10)
+				{
+					scene->shapes.back()->width = 10;
+				}
+				if (scene->shapes.back()->height < 10)
+				{
+					scene->shapes.back()->height = 10;
+				}
 				return 422;
 			}
 			
