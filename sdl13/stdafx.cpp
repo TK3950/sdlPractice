@@ -9,6 +9,19 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 
+int shape::GetPointX()
+{
+	return pointx;
+}
+int shape::GetPointY()
+{
+	return pointy;
+}
+void shape::SetPoints(int newX, int newY)
+{
+	pointx = newX;
+	pointy = newY;
+}
 
 int shape::GetPosX()
 {
@@ -22,29 +35,44 @@ int shape::GetPosY()
 
 void shape::SetPos(int newX, int newY)
 {
-	this->posx = newX;
-	this->posy = newY;
+	posx = newX;
+	posy = newY;
 }
 
 
 void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 {
 	SDL_SetRenderDrawColor(r, c->r, c->g, c->b, c->a);
-	if (s->fo == TK_RHOMBUS)
+	switch (s->fo)
 	{
-		drawRhombus(r, *s);
-	}
+		case TK_RHOMBUS:
+			drawRhombus(r, *s);
+			break;
+		case TK_RECTANGLE:
+			drawRectangle(r, *s);
+			break;
+		case TK_ELLIPSE:
+			drawEllipse(r, *s);
+			break;
+		case TK_LINE:
+			drawLine(r, *s);
+			break;
+		case TK_ARROW:
+			drawArrow(r, *s);
+			break;
 
-	if (s->fo == TK_RECTANGLE)
-	{
-		drawRectangle(r, *s);
-	}
 
-	if (s->fo == TK_ELLIPSE)
-	{
-		drawEllipse(r, *s);
-		int d = 0;
 	}
+}
+
+void shape::drawArrow(SDL_Renderer *r, shape t)
+{
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPointX(), t.GetPointY());
+}
+
+void shape::drawLine(SDL_Renderer *r, shape t)
+{
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPointX(), t.GetPointY());
 }
 
 void shape::drawRhombus(SDL_Renderer *r, shape t) {

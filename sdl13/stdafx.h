@@ -56,18 +56,23 @@ public:
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
 	void drawEllipse(SDL_Renderer *r, shape s);
+	void drawLine(SDL_Renderer *r, shape s);
+	void drawArrow(SDL_Renderer *r, shape s);
 	
 	int GetPosX();
 	int GetPosY();
 	void SetPos(int newX, int newY);
 
+	int GetPointX();
+	int GetPointY();
+	void SetPoints(int newX, int newY);
 	
 	int width, height;
 	color* co;
 	form fo;
 
 private:
-	int posx, posy;
+	int posx, posy, pointx, pointy;
 	
 };
 
