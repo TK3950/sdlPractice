@@ -57,11 +57,20 @@ public:
 	void drawRectangle(SDL_Renderer *r, shape s);
 	void drawEllipse(SDL_Renderer *r, shape s);
 	
+	int GetPosX();
+	int GetPosY();
+	void SetPos(int newX, int newY);
 
 	
-	int width, height, posx, posy;
+	int width, height;
 	color* co;
 	form fo;
+
+private:
+	int posx, posy;
+	
 };
+
+
 
 #endif

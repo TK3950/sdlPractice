@@ -34,3 +34,8 @@ while(!quit)
 			{
 				shapes.front()->posy = shapes.front()->posy - 1;
 			}
+
+
+
+			SDL_BlitSurface(surf, NULL, surf, NULL);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(re, surf);

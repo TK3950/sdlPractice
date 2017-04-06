@@ -29,22 +29,22 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 		{
 			// look for shapes that escape our bounds
 			// and return them to within the bounds
-			if (shapes.at(i)->posx < 0)
+			if (shapes.at(i)->GetPosX() < 0)
 			{
-				shapes.at(i)->posx = 0;
+				shapes.at(i)->SetPos(0, shapes.at(i)->GetPosY());
 			}
-			if (shapes.at(i)->posx+shapes.at(i)->width > TK_WINDOW_WIDTH)
+			if (shapes.at(i)->GetPosX()+shapes.at(i)->width > TK_WINDOW_WIDTH)
 			{
-				shapes.at(i)->posx = TK_WINDOW_WIDTH - shapes.at(i)->width;
+				shapes.at(i)->SetPos(TK_WINDOW_WIDTH - shapes.at(i)->width, shapes.at(i)->GetPosY());
 			}
 
-			if (shapes.at(i)->posy < 0)
+			if (shapes.at(i)->GetPosY() < 0)
 			{
-				shapes.at(i)->posy = 0;
+				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), 0);
 			}
-			if (shapes.at(i)->posy + shapes.at(i)->height > TK_WINDOW_HEIGHT)
+			if (shapes.at(i)->GetPosY() + shapes.at(i)->height > TK_WINDOW_HEIGHT)
 			{
-				shapes.at(i)->posy = TK_WINDOW_HEIGHT - shapes.at(i)->height;
+				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->height);
 			}
 
 			if (i + 1 == shapes.size())
@@ -85,11 +85,10 @@ int main()
 	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh, pc, sc);
 	
 #pragma endregion
-	SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-	SDL_RenderClear(r);
+
 	ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 	SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
-	scene->UpdateScreen(scene->rr, scene->ss); // first display
+	UpdateScreen(scene); // first display
 	
 	while (!TK_QUIT)
 	{
@@ -102,8 +101,7 @@ int main()
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
-			scene->UpdateScreen(scene->rr, scene->ss); // first display
-			//SDL_Delay(5); // just a small thread delay, remove if it gets slow
+			UpdateScreen(scene); 
 		}
 
 	}

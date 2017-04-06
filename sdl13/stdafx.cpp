@@ -10,6 +10,23 @@
 // and not in this file
 
 
+int shape::GetPosX()
+{
+	return posx;
+}
+
+int shape::GetPosY()
+{
+	return posy;
+}
+
+void shape::SetPos(int newX, int newY)
+{
+	this->posx = newX;
+	this->posy = newY;
+}
+
+
 void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 {
 	SDL_SetRenderDrawColor(r, c->r, c->g, c->b, c->a);
@@ -26,23 +43,24 @@ void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 	if (s->fo == TK_ELLIPSE)
 	{
 		drawEllipse(r, *s);
+		int d = 0;
 	}
 }
 
 void shape::drawRhombus(SDL_Renderer *r, shape t) {
-	SDL_RenderDrawLine(r, t.posx, t.posy + t.height/2,		t.posx + t.width/2, t.posy);
-	SDL_RenderDrawLine(r, t.posx, t.posy + t.height / 2, t.posx + t.width / 2, t.posy+t.height);
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY() + t.height/2,		t.GetPosX() + t.width/2, t.GetPosY());
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY() + t.height / 2, t.GetPosX() + t.width / 2, t.GetPosY()+t.height);
 
-	SDL_RenderDrawLine(r, t.posx + t.width, t.posy + t.height / 2, t.posx + t.width / 2, t.posy);
-	SDL_RenderDrawLine(r, t.posx + t.width, t.posy + t.height / 2, t.posx + t.width / 2, t.posy + t.height);
+	SDL_RenderDrawLine(r, t.GetPosX() + t.width, t.GetPosY() + t.height / 2, t.GetPosX() + t.width / 2, t.GetPosY());
+	SDL_RenderDrawLine(r, t.GetPosX() + t.width, t.GetPosY() + t.height / 2, t.GetPosX() + t.width / 2, t.GetPosY() + t.height);
 
 }
 void shape::drawRectangle(SDL_Renderer *r, shape t) {
 
-	SDL_RenderDrawLine(r, t.posx, t.posy, t.posx + t.width, t.posy);
-	SDL_RenderDrawLine(r, t.posx, t.posy, t.posx, t.posy+t.height);
-	SDL_RenderDrawLine(r, t.posx+t.width, t.posy+t.height, t.posx+t.width, t.posy);
-	SDL_RenderDrawLine(r, t.posx+t.width, t.posy+t.height, t.posx, t.posy+t.height);
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPosX() + t.width, t.GetPosY());
+	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPosX(), t.GetPosY()+t.height);
+	SDL_RenderDrawLine(r, t.GetPosX()+t.width, t.GetPosY()+t.height, t.GetPosX()+t.width, t.GetPosY());
+	SDL_RenderDrawLine(r, t.GetPosX()+t.width, t.GetPosY()+t.height, t.GetPosX(), t.GetPosY()+t.height);
 
 }
 
@@ -51,10 +69,10 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 	double b = t.height / 2;
 #ifndef BRESENHAM
 
-	SDL_RenderDrawPoint(r, t.posx + a, t.posy);
-	SDL_RenderDrawPoint(r, t.posx + a, t.posy + (b*2));
-	SDL_RenderDrawPoint(r, t.posx , t.posy + b);
-	SDL_RenderDrawPoint(r, t.posx + (a * 2), t.posy +b);
+	SDL_RenderDrawPoint(r, t.GetPosX() + a, t.GetPosY());
+	SDL_RenderDrawPoint(r, t.GetPosX() + a, t.GetPosY() + (b*2));
+	SDL_RenderDrawPoint(r, t.GetPosX() , t.GetPosY() + b);
+	SDL_RenderDrawPoint(r, t.GetPosX() + (a * 2), t.GetPosY() +b);
 
 	for (int x = -t.width; x <= t.width; x++)
 	{
@@ -62,8 +80,8 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 		{
 			int y = round(sqrt((b*b)*(1 - ((x*x) / (a*a)))));
 			
-			SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
-			SDL_RenderDrawPoint(r, t.posx + x + a, t.posy - y + b);
+			SDL_RenderDrawPoint(r, t.GetPosX() + x + a, t.GetPosY() + y + b);
+			SDL_RenderDrawPoint(r, t.GetPosX() + x + a, t.GetPosY() - y + b);
 		}
 		
 	}
@@ -75,8 +93,8 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 		{
 
 			int x = round(sqrt((a*a)*(1 - ((y*y) / (b*b)))));
-			SDL_RenderDrawPoint(r, t.posx + x + a, t.posy + y + b);
-			SDL_RenderDrawPoint(r, t.posx - x + a, t.posy + y + b);
+			SDL_RenderDrawPoint(r, t.GetPosX() + x + a, t.GetPosY() + y + b);
+			SDL_RenderDrawPoint(r, t.GetPosX() - x + a, t.GetPosY() + y + b);
 		}
 	}
 #endif
@@ -84,8 +102,8 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 #ifdef BRESENHAM
 	int width = t.width/2;
 	int height = t.height/2;
-	int xc = t.posx+a;
-	int yc = t.posy+b;
+	int xc = t.GetPosX()+a;
+	int yc = t.GetPosY()+b;
 	{
 		int a2 = width * width;
 		int b2 = height * height;
@@ -123,8 +141,6 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 		}
 	}
 #endif
-	
-	a += 1;
 
 }
 

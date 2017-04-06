@@ -24,20 +24,17 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	shapes = sh;
 	PrimaryColor = pc;
 	SecondaryColor = sc;
+	SDL_BlitSurface(ss, NULL, ss, NULL);
+	tt = SDL_CreateTextureFromSurface(rr, ss);
 
 }
 
-void TKSCENE::UpdateScreen(SDL_Renderer* re, SDL_Surface* surf)
+void UpdateScreen(TKSCENE* sc)
 {
-	SDL_BlitSurface(surf, NULL, surf, NULL);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(re, surf);
-	SDL_RenderCopy(re, texture, NULL, NULL);
-	SDL_RenderPresent(re); // show
+	
+	SDL_RenderCopy(sc->rr, sc->tt, NULL, NULL);
+	SDL_RenderPresent(sc->rr); // show
 }
-
-
-
-
 
 int GetAllEvents(TKSCENE* scene)
 {
@@ -89,17 +86,22 @@ int GetAllEvents(TKSCENE* scene)
 			{
 				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
 				{
-					if (scene->ee->motion.x < scene->shapes.at(i)->posx + scene->shapes.at(i)->width && !scene->shapes.empty())
+					if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width && !scene->shapes.empty())
 					{
-						if (scene->ee->motion.x > scene->shapes.at(i)->posx)
+						if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 						{
-							if (scene->ee->motion.y < scene->shapes.at(i)->posy + scene->shapes.at(i)->height)
+							if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->height)
 							{
-								if (scene->ee->motion.y > scene->shapes.at(i)->posy)
+								if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 								{
 									dragMode = true;
 									// the cursor clicked inside the bounds of the shape
 									selectedShape = i; // last shape within bounds
+									if (selectedShape != scene->shapes.size() - 1)
+									{
+										scene->shapes.push_back(scene->shapes.at(selectedShape));
+										scene->shapes.erase(scene->shapes.begin() + selectedShape);
+									}
 								}
 							}
 						}
@@ -108,11 +110,15 @@ int GetAllEvents(TKSCENE* scene)
 			}
 			if (dragMode && !scene->shapes.empty() ) 
 			{
-				scene->shapes.push_back(scene->shapes.at(selectedShape));
+				if (selectedShape != scene->shapes.size() - 1)
+				{
+					scene->shapes.push_back(scene->shapes.at(selectedShape));
+					scene->shapes.erase(scene->shapes.begin() + selectedShape);
+				}
+
 				if (abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
 				{
-					scene->shapes.back()->posx += scene->ee->motion.xrel;
-					scene->shapes.back()->posy += scene->ee->motion.yrel;
+					scene->shapes.back()->SetPos(scene->shapes.back()->GetPosX() + scene->ee->motion.xrel, scene->shapes.back()->GetPosY() + scene->ee->motion.yrel);
 				}
 			}
 			return 418;
@@ -128,17 +134,24 @@ int GetAllEvents(TKSCENE* scene)
 			{
 				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
 				{
-					if (scene->ee->motion.x < scene->shapes.at(i)->posx + scene->shapes.at(i)->width && !scene->shapes.empty())
+					if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width && !scene->shapes.empty())
 					{
-						if (scene->ee->motion.x > scene->shapes.at(i)->posx)
+						if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 						{
-							if (scene->ee->motion.y < scene->shapes.at(i)->posy + scene->shapes.at(i)->height)
+							if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->height)
 							{
-								if (scene->ee->motion.y > scene->shapes.at(i)->posy)
+								if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 								{
+
 									editMode = true;
 									// the cursor clicked inside the bounds of the shape
-									selectedShape = i; // last shape within bounds
+									selectedShape = i;	// index last shape within bounds is stored here
+									if (selectedShape != scene->shapes.size() - 1)
+									{
+										scene->shapes.push_back(scene->shapes.at(selectedShape));
+										scene->shapes.erase(scene->shapes.begin() + selectedShape);
+									}
+
 								}
 							}
 						}
@@ -150,7 +163,7 @@ int GetAllEvents(TKSCENE* scene)
 																				// consider #define'ing
 		if (scene->ee->button.button == 4 && editMode && !scene->shapes.empty()) // right click held + drag is 4 instead of 3
 		{
-			scene->shapes.push_back(scene->shapes.at(selectedShape));
+
 			if (abs(scene->ee->motion.xrel) < 1000)
 			{
 				scene->shapes.back()->width += scene->ee->motion.xrel;
