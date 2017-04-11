@@ -1,7 +1,10 @@
 // sdl13.cpp : Defines the entry point for the console application.
 // 
 
-// TODO: create a clean buffer for handling events, i.e. a keypress buffer
+// TODO: clean/privatize shape class, add line & arrow defintions
+//		standardize event handler returns
+//		add nodes to shapes for line connections
+//		have lines remain at right angles
 
 
 #include <list>

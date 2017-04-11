@@ -49,7 +49,9 @@ public:
 		TK_MENU
 	};
 
-	shape(form f, color* c, int x, int y, int w, int h) : width(w), height(h), posx(x), posy(y), fo(f), co(c){}
+	shape(form f, color* c, int x, int y, int w, int h)
+		: width(w), height(h), posx(x), posy(y), fo(f), co(c), pointx(x + w), pointy(y + h)
+		{}
 
 
 	void drawShape(SDL_Renderer *r, color *c, shape *s);

@@ -39,3 +39,9 @@ while(!quit)
 
 			SDL_BlitSurface(surf, NULL, surf, NULL);
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(re, surf);
+
+
+
+
+
+	if (scene->shapes.at(i)->fo != shape::TK_ARROW && scene->shapes.at(i)->fo != shape::TK_LINE)

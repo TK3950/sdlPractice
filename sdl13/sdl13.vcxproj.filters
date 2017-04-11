@@ -18,9 +18,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
     <Text Include="scrap.txt">
       <Filter>Scraps</Filter>
+    </Text>
+    <Text Include="ReadMe.txt">
+      <Filter>Header Files</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +36,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="tksdl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tkcodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
