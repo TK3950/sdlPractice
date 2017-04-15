@@ -54,14 +54,6 @@ void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 		case TK_ELLIPSE:
 			drawEllipse(r, *s);
 			break;
-		case TK_LINE:
-			drawLine(r, *s);
-			break;
-		case TK_ARROW:
-			drawArrow(r, *s);
-			break;
-
-
 	}
 }
 

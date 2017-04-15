@@ -43,10 +43,6 @@ public:
 		TK_RECTANGLE = 0,
 		TK_RHOMBUS,
 		TK_ELLIPSE,
-		TK_TEXT,
-		TK_LINE,
-		TK_ARROW,
-		TK_MENU
 	};
 
 	shape(form f, color* c, int x, int y, int w, int h)

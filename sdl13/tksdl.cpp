@@ -70,11 +70,7 @@ int GetAllEvents(TKSCENE* scene)
 			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
-		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_4 && scene->ee->key.state == SDL_PRESSED)
-		{
-			scene->shapes.push_back(new shape(shape::TK_ARROW, scene->PrimaryColor, 0, 0, 100, 50));
-			return scene->ee->key.keysym.scancode;
-		}
+
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q && scene->ee->key.state == SDL_PRESSED)
 		{
 			return scene->ee->key.keysym.scancode;
@@ -93,8 +89,6 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-						if (scene->shapes.at(i)->fo != shape::TK_ARROW && scene->shapes.at(i)->fo != shape::TK_LINE)
-						{
 							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width)
 							{
 								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
@@ -114,26 +108,6 @@ int GetAllEvents(TKSCENE* scene)
 									}
 								}
 							}
-						}
-						else
-						{
-							// line manipulation checks
-							// get slope of line
-							double slope = 0;
-							slope = ((double)scene->shapes.at(i)->GetPointX() - (double)scene->shapes.at(i)->GetPosX()) / ((double)scene->shapes.at(i)->GetPointY() - (double)scene->shapes.at(i)->GetPosY());
-							double ydeviance = fabs((double)scene->ee->motion.y - (double)(scene->ee->motion.x) / slope);
-							double xdeviance = fabs((double)scene->ee->motion.x - (double)(scene->ee->motion.y) * slope);
-							if (xdeviance < 10 || ydeviance < 10)
-							{
-								dragMode = true;	// the cursor clicked inside the bounds of the shape
-								selectedShape = i;	// last shape within bounds
-								if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
-								{
-									scene->shapes.push_back(scene->shapes.at(selectedShape));
-									scene->shapes.erase(scene->shapes.begin() + selectedShape);
-								}
-							}
-						}
 					}
 				}
 			}
@@ -147,6 +121,7 @@ int GetAllEvents(TKSCENE* scene)
 
 				if (abs(scene->ee->motion.xrel) < TK_WINDOW_WIDTH && abs(scene->ee->motion.yrel) < TK_WINDOW_WIDTH)
 				{
+					// DRAGGING!
 					scene->shapes.back()->SetPos(scene->shapes.back()->GetPosX() + scene->ee->motion.xrel, scene->shapes.back()->GetPosY() + scene->ee->motion.yrel);
 				}
 			}
@@ -165,8 +140,6 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-						if (scene->shapes.at(i)->fo != shape::TK_ARROW && scene->shapes.at(i)->fo != shape::TK_LINE)
-						{
 							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width)
 							{
 								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
@@ -187,11 +160,6 @@ int GetAllEvents(TKSCENE* scene)
 									}
 								}
 							}
-						}
-						else
-						{
-							// line select
-						}
 					}
 				}
 			}
@@ -203,8 +171,12 @@ int GetAllEvents(TKSCENE* scene)
 
 			if (abs(scene->ee->motion.xrel) < 1000)
 			{
+
+				// resizing!
 				scene->shapes.back()->width += scene->ee->motion.xrel;
 				scene->shapes.back()->height += scene->ee->motion.yrel;
+
+
 				// unfortunately, we need to protect against negatives
 				if (scene->shapes.back()->width < 10)
 				{
