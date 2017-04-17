@@ -12,7 +12,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	w = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
 		SDL_WINDOWPOS_UNDEFINED, // x position
 		SDL_WINDOWPOS_UNDEFINED, // y position
-		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width , height
+		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width, height
 		SDL_WINDOW_OPENGL); // window flags
 
 	//s = SDL_LoadBMP(""); // empty path means we don't load an image, we get a clean slate. also returns null, so functionally useless.
@@ -89,11 +89,11 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width)
+							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
 							{
 								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 								{
-									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->height)
+									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
 									{
 										if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 										{
@@ -140,11 +140,11 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->width)
+							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
 							{
 								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 								{
-									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->height)
+									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
 									{
 										if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 										{
@@ -173,18 +173,18 @@ int GetAllEvents(TKSCENE* scene)
 			{
 
 				// resizing!
-				scene->shapes.back()->width += scene->ee->motion.xrel;
-				scene->shapes.back()->height += scene->ee->motion.yrel;
+				scene->shapes.back()->SetWidth(scene->shapes.back()->GetWidth() + scene->ee->motion.xrel);
+				scene->shapes.back()->SetHeight(scene->shapes.back()->GetHeight() + scene->ee->motion.yrel);
 
 
 				// unfortunately, we need to protect against negatives
-				if (scene->shapes.back()->width < 10)
+				if (scene->shapes.back()->GetWidth() < 10)
 				{
-					scene->shapes.back()->width = 10;
+					scene->shapes.back()->SetWidth(10);
 				}
-				if (scene->shapes.back()->height < 10)
+				if (scene->shapes.back()->GetHeight() < 10)
 				{
-					scene->shapes.back()->height = 10;
+					scene->shapes.back()->SetHeight(10);
 				}
 				return 422;
 			}

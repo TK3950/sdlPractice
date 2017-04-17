@@ -23,6 +23,26 @@ void shape::SetPoints(int newX, int newY)
 	pointy = newY;
 }
 
+int shape::GetWidth()
+{
+	return width;
+}
+int shape::GetHeight()
+{
+	return height;
+}
+void shape::SetWidth(int newWidth)
+{
+	width = newWidth;
+}
+
+void shape::SetHeight(int newHeight)
+{
+	height = newHeight;
+}
+
+
+
 int shape::GetPosX()
 {
 	return posx;

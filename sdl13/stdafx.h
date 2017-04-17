@@ -65,12 +65,16 @@ public:
 	int GetPointY();
 	void SetPoints(int newX, int newY);
 	
-	int width, height;
+	int GetWidth();
+	int GetHeight();
+	void SetWidth(int newWidth);
+	void SetHeight(int newHeight);
+
 	color* co;
 	form fo;
 
 private:
-	int posx, posy, pointx, pointy;
+	int posx, posy, pointx, pointy, width, height;
 	
 };
 

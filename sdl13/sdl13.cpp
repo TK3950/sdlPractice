@@ -36,18 +36,18 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 			{
 				shapes.at(i)->SetPos(0, shapes.at(i)->GetPosY());
 			}
-			if (shapes.at(i)->GetPosX()+shapes.at(i)->width > TK_WINDOW_WIDTH)
+			if (shapes.at(i)->GetPosX()+shapes.at(i)->GetWidth() > TK_WINDOW_WIDTH)
 			{
-				shapes.at(i)->SetPos(TK_WINDOW_WIDTH - shapes.at(i)->width, shapes.at(i)->GetPosY());
+				shapes.at(i)->SetPos(TK_WINDOW_WIDTH - shapes.at(i)->GetWidth(), shapes.at(i)->GetPosY());
 			}
 
 			if (shapes.at(i)->GetPosY() < 0)
 			{
 				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), 0);
 			}
-			if (shapes.at(i)->GetPosY() + shapes.at(i)->height > TK_WINDOW_HEIGHT)
+			if (shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() > TK_WINDOW_HEIGHT)
 			{
-				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->height);
+				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->GetHeight());
 			}
 
 			if (i + 1 == shapes.size())
