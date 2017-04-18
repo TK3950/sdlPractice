@@ -37,9 +37,18 @@ public:
 		TK_ELLIPSE,
 	};
 
+	enum node {
+		TOP = 0,
+		RIGHT,
+		BOTTOM,
+		LEFT,
+	};
+
 	shape(form f, color* c, int x, int y, int w, int h)
 		: width(w), height(h), posx(x), posy(y), fo(f), co(c), pointx(x + w), pointy(y + h)
-		{}
+		{
+			
+		}
 
 
 	void drawShape(SDL_Renderer *r, color *c, shape *s);
@@ -62,11 +71,27 @@ public:
 	void SetWidth(int newWidth);
 	void SetHeight(int newHeight);
 
+	void UpdateNodes()
+	{
+		nodex[node::TOP] = posx + width / 2;
+		nodey[node::TOP] = posy;
+
+		nodex[node::RIGHT] = posx + width;
+		nodey[node::RIGHT] = posy + height / 2;
+
+		nodex[node::BOTTOM] = posx + width / 2;
+		nodey[node::BOTTOM] = posy + height;
+
+		nodex[node::LEFT] = posx;
+		nodey[node::LEFT] = posy + height / 2;
+	}
 	color* co;
 	form fo;
 
 private:
 	int posx, posy, pointx, pointy, width, height;
+	int nodex[4];
+	int nodey[4];
 	
 };
 
