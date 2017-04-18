@@ -10,6 +10,7 @@
 #include <list>
 #include <SDL/SDL.h>
 #include "tksdl.h"
+#include "paths.h"
 #include <windows.h>
 #undef main
 
@@ -63,6 +64,25 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 
 }
 
+void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<path*> paths) // Simple method to render all paths in a non-empty list
+{
+
+	if (!(paths.empty()))
+	{
+		for (unsigned int i = 0; i < paths.size(); ++i)
+		{
+			if (i + 1 == paths.size())
+			{
+				paths.front()->path::drawPath(re, ac, paths.at(i)); // draw current path into renderer
+			}
+			else
+			{
+				paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
+			}
+		}
+	}
+
+}
 
 void ClearAll(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes)
 {
@@ -82,10 +102,11 @@ int main()
 	SDL_Window* w = NULL;
 	SDL_Event e;
 	std::vector<shape*> sh;
-	color* pc = new color(0, 0, 0, 255);
-	color* sc = new color(255, 255, 255, 255);
-	color* ac = new color(200, 20, 20, 255);
-	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh, pc, sc);
+	std::vector<path*> pa;
+	color* pc = new color(0, 0, 0, 255); // primary color
+	color* sc = new color(255, 255, 255, 255); // secondary color
+	color* ac = new color(200, 20, 20, 255); // accent/active color
+	TKSCENE *scene = new TKSCENE(r,  s,  w,  &e, sh, pa, pc, sc);
 	
 #pragma endregion
 
@@ -104,6 +125,7 @@ int main()
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
+			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
 			UpdateScreen(scene); 
 		}
 

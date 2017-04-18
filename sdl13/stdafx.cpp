@@ -35,24 +35,19 @@ void shape::SetWidth(int newWidth)
 {
 	width = newWidth;
 }
-
 void shape::SetHeight(int newHeight)
 {
 	height = newHeight;
 }
 
-
-
 int shape::GetPosX()
 {
 	return posx;
 }
-
 int shape::GetPosY()
 {
 	return posy;
 }
-
 void shape::SetPos(int newX, int newY)
 {
 	posx = newX;

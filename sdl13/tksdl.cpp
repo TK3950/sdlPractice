@@ -1,12 +1,11 @@
 #pragma once
 #include "tksdl.h"
-#include "events.h"
 
 bool dragMode;
 bool editMode;
 int selectedShape;
 
-TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, color* pc, color* sc)
+TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
 	w = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
@@ -22,6 +21,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	ww = w;
 	ee = e;
 	shapes = sh;
+	paths = pa;
 	PrimaryColor = pc;
 	SecondaryColor = sc;
 	SDL_BlitSurface(ss, NULL, ss, NULL);
