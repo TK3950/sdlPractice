@@ -28,6 +28,26 @@ public:
 	int height;
 };
 
+
+class path {
+public:
+	path(int srcX, int srcY, int destX, int destY) : startx(srcX), starty(srcY), endx(destX), endy(destY) {}
+
+
+	unsigned int nodes;
+	int startx, starty;
+	int endx, endy;
+	
+};
+
+class line {
+public:
+	line(int x, int y, int x2, int y2) : posx(x), posy(y), pointx(x2), pointy(y2) {}
+
+private:
+	int posx, posy, pointx, pointy;
+};
+
 class color {
 public:
 	color(int red, int green, int blue, int alpha) : r(red), g(green), b(blue), a(alpha) {}
