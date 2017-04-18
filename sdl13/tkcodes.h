@@ -9,6 +9,6 @@
 
 #define TK_CODE_DRAG 401
 #define TK_CODE_RESIZE 403
-
+#define TK_CODE_ADDLINE 405
 
 #endif

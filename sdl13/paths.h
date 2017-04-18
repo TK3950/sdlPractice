@@ -6,15 +6,21 @@
 
 class path {
 public:
-	path(int srcX, int srcY, int destX, int destY) : startx(srcX), starty(srcY), endx(destX), endy(destY) {}
+	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape1), destination(shape2), nodes(node_count) {
+		nodex = new int[node_count];
+		nodey = new int[node_count];
+		NewPath();
+	}
 	void NewPath();
-	void path::drawPath(SDL_Renderer *r, color* c, path *s);
+	void drawPath(SDL_Renderer *r, color* c, path *s);
+
+	unsigned int source;
+	unsigned int destination;
 
 private:
 	unsigned int nodes;
-	int startx, starty;
-	int endx, endy;
-
+	int * nodex;
+	int * nodey;
 };
 
 class line {

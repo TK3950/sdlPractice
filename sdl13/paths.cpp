@@ -2,7 +2,7 @@
 
 void path::NewPath()
 {
-
+	// this is where we try to find a path.
 }
 
 

@@ -3,7 +3,11 @@
 
 bool dragMode;
 bool editMode;
+bool lineMode;
+bool lineGood;
 int selectedShape;
+// these variables are defined here to maintain persistence. Look for a better way to achieve this
+// such as in a status class.
 
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
@@ -38,6 +42,7 @@ void UpdateScreen(TKSCENE* sc)
 
 int GetAllEvents(TKSCENE* scene)
 {
+	lineGood = false;
 	while (SDL_PollEvent(scene->ee) != 0)
 	{
 		int mousex = scene->ee->motion.x;
@@ -50,9 +55,21 @@ int GetAllEvents(TKSCENE* scene)
 		int motiontype = scene->ee->motion.type;
 
 		printf("=========================================================================\n");
-		printf("Keystate = %d\t\t Keycode = %d\t\tPRESSED = %d\n",keystate,keycode,scene->ee->button.state);
+		printf("Keystate = %d\t\t Keycode = %d\t\tPRESSED = %d\n", keystate, keycode, scene->ee->button.state);
 		printf("Mouse state = %d\t\t Mouse button = %d\n", buttonstate, button);
 		printf("Motion type = %d\t Mouse x = %d\t Mouse y = %d\n", motiontype, mousex, mousey);
+		if (lineMode)
+		{
+			printf("LINE ADD MODE\n");
+		}
+		if (editMode)
+		{
+			printf("SHAPE EDIT MODE\n");
+		}
+		if (dragMode)
+		{
+			printf("SHAPE DRAG MODE\n");
+		}
 #endif
 
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_1 && scene->ee->key.state == SDL_PRESSED)
@@ -60,26 +77,30 @@ int GetAllEvents(TKSCENE* scene)
 			scene->shapes.push_back(new shape(shape::TK_RHOMBUS, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
+		// KEYPRESS: 1
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_2 && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.push_back(new shape(shape::TK_RECTANGLE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
+		// KEYPRESS: 2
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_3 && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.push_back(new shape(shape::TK_ELLIPSE, scene->PrimaryColor, 0, 0, 100, 50));
 			return scene->ee->key.keysym.scancode;
 		}
-
+		// KEYPRESS: 3
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_Q && scene->ee->key.state == SDL_PRESSED)
 		{
 			return scene->ee->key.keysym.scancode;
 		}
+		// KEYPRESS: Q
 		if (scene->ee->key.keysym.scancode == SDL_SCANCODE_DELETE && scene->ee->key.state == SDL_PRESSED)
 		{
 			scene->shapes.pop_back();
 			return scene->ee->key.keysym.scancode;
 		}
+		// KEYPRESS: DEL
 
 		if (scene->ee->button.button == SDL_BUTTON_LEFT)
 		{
@@ -89,29 +110,29 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						{
+							if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 							{
-								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
+								if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
 								{
-									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
+									if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 									{
-										if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
+										dragMode = true;	// the cursor clicked inside the bounds of the shape
+										selectedShape = i;	// last shape within bounds
+										if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
 										{
-											dragMode = true;	// the cursor clicked inside the bounds of the shape
-											selectedShape = i;	// last shape within bounds
-											if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
-											{
-												scene->shapes.push_back(scene->shapes.at(selectedShape));
-												scene->shapes.erase(scene->shapes.begin() + selectedShape);
-											}
+											scene->shapes.push_back(scene->shapes.at(selectedShape));
+											scene->shapes.erase(scene->shapes.begin() + selectedShape);
 										}
 									}
 								}
 							}
+						}
 					}
 				}
 			}
-			if (dragMode && !scene->shapes.empty() ) 
+			if (dragMode && !scene->shapes.empty())
 			{
 				if (selectedShape != scene->shapes.size() - 1)
 				{
@@ -127,10 +148,12 @@ int GetAllEvents(TKSCENE* scene)
 			}
 			return 418;
 		}
+		// CLICKED: LEFT
 		else
 		{
 			dragMode = false;
 		}
+		// NOT-CLICKED && NOT-HELD: LEFT
 
 		if (scene->ee->button.button == SDL_BUTTON_RIGHT)
 		{
@@ -140,31 +163,32 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					if (!scene->shapes.empty())
 					{
-							if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						{
+							if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
 							{
-								if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
+								if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
 								{
-									if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
+									if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
 									{
-										if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
+										editMode = true;	// the cursor clicked inside the bounds of the shape
+										selectedShape = i;	// index last shape within bounds is stored here
+										if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
 										{
-											editMode = true;	// the cursor clicked inside the bounds of the shape
-											selectedShape = i;	// index last shape within bounds is stored here
-											if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
-											{
-												scene->shapes.push_back(scene->shapes.at(selectedShape));
-												scene->shapes.erase(scene->shapes.begin() + selectedShape);
-											}
-
+											scene->shapes.push_back(scene->shapes.at(selectedShape));
+											scene->shapes.erase(scene->shapes.begin() + selectedShape);
 										}
+
 									}
 								}
 							}
+						}
 					}
 				}
 			}
 			return 418;
 		}
+		// CLICKED: RIGHT
 																				// consider #define'ing
 		if (scene->ee->button.button == 4 && editMode && !scene->shapes.empty()) // right click held + drag is 4 instead of 3
 		{
@@ -188,20 +212,102 @@ int GetAllEvents(TKSCENE* scene)
 				}
 				return 422;
 			}
-			
+
 		}
-		
-		
+		// HOLD-CLICK: RIGHT
+
+
 		if (scene->ee->button.button != SDL_BUTTON_RIGHT && scene->ee->button.button != 4)
 		{
 			editMode = false;
 		}
+		// NOT-CLICKED && NOT-HELD: RIGHT
 
 
 
+
+		if (scene->ee->button.button == SDL_BUTTON_MIDDLE)
+		{
+			if (scene->ee->button.state == SDL_PRESSED)
+			{
+				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+				{
+					if (!scene->shapes.empty())
+					{
+						if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						{
+							if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
+							{
+								if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
+								{
+									if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
+									{
+										lineMode = true;	// the cursor clicked inside the bounds of the shape
+										selectedShape = i;	// last shape within bounds
+										if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
+										{
+											scene->shapes.push_back(scene->shapes.at(selectedShape));
+											scene->shapes.erase(scene->shapes.begin() + selectedShape);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			else if (scene->ee->motion.type == 1024 && scene->ee->button.state != SDL_PRESSED)
+			{
+				// middle and drag
+
+			}
+
+			else if (scene->ee->motion.type == 1026 && scene->ee->button.state != SDL_PRESSED)
+			{
+				// middle and released
+				for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+				{
+					if (!scene->shapes.empty())
+					{
+						if (scene->ee->motion.x < scene->shapes.at(i)->GetPosX() + scene->shapes.at(i)->GetWidth())
+						{
+							if (scene->ee->motion.x > scene->shapes.at(i)->GetPosX())
+							{
+								if (scene->ee->motion.y < scene->shapes.at(i)->GetPosY() + scene->shapes.at(i)->GetHeight())
+								{
+									if (scene->ee->motion.y > scene->shapes.at(i)->GetPosY())
+									{
+										selectedShape = i;	// last shape within bounds
+										if (selectedShape != scene->shapes.size() - 1) // if our shape is not at the back of our vector
+										{
+											scene->shapes.push_back(scene->shapes.at(selectedShape));
+											scene->shapes.erase(scene->shapes.begin() + selectedShape);
+											lineGood = true; // source shape is not destination shape
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				// now we make the line
+				if (lineGood)
+				{
+					// draw with shapes at last and second to last position
+					scene->paths.push_back(new path(scene->paths.size(), scene->paths.size() - 1, 3));
+					return 405;
+				}
+			}
+
+		}
+		// CLICKED: MIDDLE
+		else
+		{
+			lineMode = false;
+		}
+		// NOT-CLICKED && NOT-HELD: MIDDLE
 	}
-
-
-
 	return 0; 
 }

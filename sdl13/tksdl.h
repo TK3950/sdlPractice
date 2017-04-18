@@ -14,15 +14,15 @@ public:
 	
 	
 	
-	SDL_Renderer*	rr;
-	SDL_Surface*	ss;
-	SDL_Window*		ww;
-	SDL_Event*		ee;
-	SDL_Texture*	tt;
-	std::vector<shape*> shapes;
-	std::vector<path*> paths;
-	color* PrimaryColor;
-	color* SecondaryColor;
+	SDL_Renderer*			rr;
+	SDL_Surface*			ss;
+	SDL_Window*				ww;
+	SDL_Event*				ee;
+	SDL_Texture*			tt;
+	std::vector<shape*>		shapes;
+	std::vector<path*>		paths;
+	color*					PrimaryColor;
+	color*					SecondaryColor;
 };
 
 void UpdateScreen(TKSCENE* sc);
