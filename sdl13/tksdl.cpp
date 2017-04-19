@@ -146,7 +146,7 @@ int GetAllEvents(TKSCENE* scene)
 					scene->shapes.back()->SetPos(scene->shapes.back()->GetPosX() + scene->ee->motion.xrel, scene->shapes.back()->GetPosY() + scene->ee->motion.yrel);
 				}
 			}
-			return 418;
+			return TK_CODE_DRAG;
 		}
 		// CLICKED: LEFT
 		else
@@ -186,7 +186,7 @@ int GetAllEvents(TKSCENE* scene)
 					}
 				}
 			}
-			return 418;
+			return TK_CODE_RESIZE;
 		}
 		// CLICKED: RIGHT
 																				// consider #define'ing
@@ -210,7 +210,7 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					scene->shapes.back()->SetHeight(10);
 				}
-				return 422;
+				return TK_CODE_RESIZE;
 			}
 
 		}
@@ -296,11 +296,12 @@ int GetAllEvents(TKSCENE* scene)
 				if (lineGood)
 				{
 					// draw with shapes at last and second to last position
-					scene->paths.push_back(new path(scene->paths.size(), scene->paths.size() - 1, 3));
-					return 405;
+					scene->paths.push_back(new path(scene->shapes.size(), scene->shapes.size() - 1, 3));
+					printf("\n====Line added successfully====\n");
 				}
+				
 			}
-
+			return TK_CODE_ADDLINE;
 		}
 		// CLICKED: MIDDLE
 		else

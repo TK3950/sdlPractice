@@ -4,6 +4,7 @@
 #include <vector>
 #include "paths.h"
 #include "stdafx.h"
+#include "tkcodes.h"
 #include <SDL/SDL.h>
 
 
