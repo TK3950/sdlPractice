@@ -33,22 +33,82 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 
 }
 
+bool isInsideBox(int x, int y, shape sh)
+{
+	if (x > sh.GetPosX() && x < sh.GetPosX() + sh.GetWidth())
+	{
+		if (y > sh.GetPosY() && y < sh.GetPosY() + sh.GetHeight())
+		{
+			return true;
+		}
+		else return false;
+	}
+	else return false;
+}
+
 int PathFind(TKSCENE* scene, path pa)
 {
 	// source shape = scene->shapes.at(pa.source);
 	pa.nodex[0] = scene->shapes.at(pa.source)->nodex[shape::TOP];
 	pa.nodey[0] = scene->shapes.at(pa.source)->nodey[shape::TOP];
 	
-	
+	// candidate node methods.
+
+	int candidatex = ((scene->shapes.at(pa.source)->nodex[shape::TOP] - pa.nodex[0])/2)+pa.nodex[0];
+	int candidatey = ((scene->shapes.at(pa.source)->nodey[shape::TOP] - pa.nodey[0])/2)+pa.nodey[0];
+	bool upperFails = false;
+	bool lowerFails = false;
+	// check upper path
+	for (int x = pa.nodex[0]; x <= candidatex; x++)
+	{
+		// if x,pa.nodey[0] is not within a restricted zone
+		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+		{
+			upperFails = isInsideBox(x, pa.nodey[0], *scene->shapes.at(i));
+		}
+	}
+	for (int y = pa.nodey[0]; y <= candidatey; y++)
+	{
+		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+		{
+			upperFails = isInsideBox(candidatex, y, *scene->shapes.at(i));
+		}
+	}
+	// end check upper path.
+	// check lower path
+
+	for (int y = pa.nodey[0]; y <= candidatey; y++)
+	{
+		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+		{
+			lowerFails = isInsideBox(pa.nodex[0], y, *scene->shapes.at(i));
+		}
+	}
+	for (int x = pa.nodex[0]; x <= candidatex; x++)
+	{
+		// if x,pa.nodey[0] is not within a restricted zone
+		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
+		{
+			lowerFails = isInsideBox(x, candidatey, *scene->shapes.at(i));
+		}
+	}
+	// end check lower path
 
 	//	>> first intermediate node = halfway on hypot.
 	//		>> check for empty spot, verify one or more paths is unobstructed
 	//			>> select inter. node and path (Lower has priority) (later we can set priority by chosen node.
 	//		>> else, move inter. node backward on hypot.
-	//	
-	//			>> next node = desired attachment point on shape
+	//
+	//		:xy
+	//
+	//		>> check for clear path to desired node, write
+	//		
+	//			>> next node = halfway on remaining hypot.
 	//				>> check uppper and lower path
-
+	//					>> select next node
+	//				>> else move node backwards
+	//
+	//		>> goto xy
 	
 
 
@@ -57,7 +117,6 @@ int PathFind(TKSCENE* scene, path pa)
 
 void UpdateScreen(TKSCENE* scene)
 {
-	
 	SDL_RenderCopy(scene->rr, scene->tt, NULL, NULL);
 	SDL_RenderPresent(scene->rr); // show
 }
