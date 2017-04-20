@@ -26,7 +26,8 @@ public:
 	color*					SecondaryColor;
 };
 
-void UpdateScreen(TKSCENE* sc);
+void UpdateScreen(TKSCENE* scene);
 int GetAllEvents(TKSCENE* scene);
+int PathFind(TKSCENE* scene, path pa);
 
 #endif

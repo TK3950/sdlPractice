@@ -17,7 +17,6 @@ public:
 	unsigned int source;
 	unsigned int destination;
 
-private:
 	unsigned int nodes;
 	int * nodex;
 	int * nodey;

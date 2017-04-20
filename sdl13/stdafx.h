@@ -88,10 +88,13 @@ public:
 	color* co;
 	form fo;
 
-private:
-	int posx, posy, pointx, pointy, width, height;
 	int nodex[4];
 	int nodey[4];
+
+
+private:
+	int posx, posy, pointx, pointy, width, height;
+
 	
 };
 

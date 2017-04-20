@@ -33,11 +33,33 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 
 }
 
-void UpdateScreen(TKSCENE* sc)
+int PathFind(TKSCENE* scene, path pa)
+{
+	// source shape = scene->shapes.at(pa.source);
+	pa.nodex[0] = scene->shapes.at(pa.source)->nodex[shape::TOP];
+	pa.nodey[0] = scene->shapes.at(pa.source)->nodey[shape::TOP];
+	
+	
+
+	//	>> first intermediate node = halfway on hypot.
+	//		>> check for empty spot, verify one or more paths is unobstructed
+	//			>> select inter. node and path (Lower has priority) (later we can set priority by chosen node.
+	//		>> else, move inter. node backward on hypot.
+	//	
+	//			>> next node = desired attachment point on shape
+	//				>> check uppper and lower path
+
+	
+
+
+
+}
+
+void UpdateScreen(TKSCENE* scene)
 {
 	
-	SDL_RenderCopy(sc->rr, sc->tt, NULL, NULL);
-	SDL_RenderPresent(sc->rr); // show
+	SDL_RenderCopy(scene->rr, scene->tt, NULL, NULL);
+	SDL_RenderPresent(scene->rr); // show
 }
 
 int GetAllEvents(TKSCENE* scene)
@@ -297,6 +319,8 @@ int GetAllEvents(TKSCENE* scene)
 				{
 					// draw with shapes at last and second to last position
 					scene->paths.push_back(new path(scene->shapes.size(), scene->shapes.size() - 1, 3));
+					PathFind(scene, *scene->paths.back());
+					
 					printf("\n====Line added successfully====\n");
 				}
 				
