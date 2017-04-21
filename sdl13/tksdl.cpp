@@ -46,6 +46,56 @@ bool isInsideBox(int x, int y, shape sh)
 	else return false;
 }
 
+bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
+{
+	for (int x = originx; x <= candX; x++)
+	{
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (isInsideBox(x, originy, *shapes.at(i)))
+			{
+				return true;
+			}
+		}
+	}
+	for (int y = originy; y <= candY; y++)
+	{
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (isInsideBox(candX, y, *shapes.at(i)))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
+{
+	for (int y = originy; y <= candY; y++)
+	{
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (isInsideBox(originx, y, *shapes.at(i)))
+			{
+				return true;
+			}
+		}
+	}
+	for (int x = originx; x <= candX; x++)
+	{
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (isInsideBox(x, candY, *shapes.at(i)))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 int PathFind(TKSCENE* scene, path pa)
 {
 	// source shape = scene->shapes.at(pa.source);
@@ -58,40 +108,15 @@ int PathFind(TKSCENE* scene, path pa)
 	int candidatey = ((scene->shapes.at(pa.source)->nodey[shape::TOP] - pa.nodey[0])/2)+pa.nodey[0];
 	bool upperFails = false;
 	bool lowerFails = false;
+	int originx = pa.nodex[0];
+	int originy = pa.nodey[0];
 	// check upper path
-	for (int x = pa.nodex[0]; x <= candidatex; x++)
-	{
-		// if x,pa.nodey[0] is not within a restricted zone
-		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
-		{
-			upperFails = isInsideBox(x, pa.nodey[0], *scene->shapes.at(i));
-		}
-	}
-	for (int y = pa.nodey[0]; y <= candidatey; y++)
-	{
-		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
-		{
-			upperFails = isInsideBox(candidatex, y, *scene->shapes.at(i));
-		}
-	}
+	upperFails = hasUpperPath(originx, originy, candidatex, candidatey, scene->shapes);
+	lowerFails = hasLowerPath(originx, originy, candidatex, candidatey, scene->shapes);
 	// end check upper path.
 	// check lower path
 
-	for (int y = pa.nodey[0]; y <= candidatey; y++)
-	{
-		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
-		{
-			lowerFails = isInsideBox(pa.nodex[0], y, *scene->shapes.at(i));
-		}
-	}
-	for (int x = pa.nodex[0]; x <= candidatex; x++)
-	{
-		// if x,pa.nodey[0] is not within a restricted zone
-		for (unsigned int i = 0; i < scene->shapes.size(); ++i)
-		{
-			lowerFails = isInsideBox(x, candidatey, *scene->shapes.at(i));
-		}
-	}
+
 	// end check lower path
 
 	//	>> first intermediate node = halfway on hypot.
