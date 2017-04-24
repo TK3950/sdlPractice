@@ -7,7 +7,7 @@
 //		have lines remain at right angles
 
 
-#include <list>
+#include <vector>
 #include <SDL/SDL.h>
 #include "tksdl.h"
 #include "paths.h"

@@ -3,23 +3,45 @@
 #define _PATHS_H 1
 #include <SDL/SDL.h>
 #include "color.h"
+#include <vector>
+
+class node{
+public:
+	enum branchType {
+		NONE = 0,
+		UPPER = 1,
+		LOWER = 2
+	};
+
+	node(int x, int y, branchType b) : posx(x), posy(y), branch(b) {}
+	int posx;
+	int posy;
+
+
+
+	branchType branch;
+
+
+};
+
 
 class path {
 public:
-	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape1), destination(shape2), nodes(node_count) {
-		nodex = new int[node_count];
-		nodey = new int[node_count];
-		NewPath();
+	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape2), destination(shape1) {
+		
 	}
-	void NewPath();
+
+
+
 	void drawPath(SDL_Renderer *r, color* c, path *s);
 
 	unsigned int source;
 	unsigned int destination;
 
-	unsigned int nodes;
-	int * nodex;
-	int * nodey;
+	std::vector<node*> nodes;
+
+	
+
 };
 
 class line {

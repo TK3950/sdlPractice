@@ -28,7 +28,6 @@ public:
 
 void UpdateScreen(TKSCENE* scene);
 int GetAllEvents(TKSCENE* scene);
-int PathFind(TKSCENE* scene, path pa);
 bool isInsideBox(int x, int y, shape sh);
 
 #endif

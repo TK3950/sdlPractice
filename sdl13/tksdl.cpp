@@ -45,12 +45,13 @@ bool isInsideBox(int x, int y, shape sh)
 	}
 	else return false;
 }
+// check if a point is within the bounding box of a shape
 
 bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
 {
 	for (int x = originx; x <= candX; x++)
 	{
-		for (unsigned int i = 0; i < shapes.size(); ++i)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
 			if (isInsideBox(x, originy, *shapes.at(i)))
 			{
@@ -60,7 +61,7 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 	for (int y = originy; y <= candY; y++)
 	{
-		for (unsigned int i = 0; i < shapes.size(); ++i)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
 			if (isInsideBox(candX, y, *shapes.at(i)))
 			{
@@ -70,12 +71,13 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 	return false;
 }
+// an unobstructed upper-right-angle-path between two points exists
 
 bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
 {
 	for (int y = originy; y <= candY; y++)
 	{
-		for (unsigned int i = 0; i < shapes.size(); ++i)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
 			if (isInsideBox(originx, y, *shapes.at(i)))
 			{
@@ -85,7 +87,7 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 	for (int x = originx; x <= candX; x++)
 	{
-		for (unsigned int i = 0; i < shapes.size(); ++i)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
 			if (isInsideBox(x, candY, *shapes.at(i)))
 			{
@@ -95,48 +97,101 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 	return false;
 }
+// an unobstructed lower-right-angle-path between two points exists
 
-int PathFind(TKSCENE* scene, path pa)
+int PathFind(TKSCENE* scene, path* pa)
 {
-	// source shape = scene->shapes.at(pa.source);
-	pa.nodex[0] = scene->shapes.at(pa.source)->nodex[shape::TOP];
-	pa.nodey[0] = scene->shapes.at(pa.source)->nodey[shape::TOP];
+	// should not be called while dragging a shape.
+
+	int exitCode = 0;
+	/* THIS IS DRAFT CODE. CLEAN IT BEFORE PUSHING TO BRANCH*/
+
+	scene->shapes.at(pa->source)->UpdateNodes();
+	scene->shapes.at(pa->destination)->UpdateNodes();
 	
+	if ((pa->nodes.empty())) // vector is empty
+	{
+		// add first node
+		pa->nodes.push_back(new node(scene->shapes.at(pa->source)->nodex[shape::TOP], scene->shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
+	}
+
+
+
 	// candidate node methods.
-
-	int candidatex = ((scene->shapes.at(pa.source)->nodex[shape::TOP] - pa.nodex[0])/2)+pa.nodex[0];
-	int candidatey = ((scene->shapes.at(pa.source)->nodey[shape::TOP] - pa.nodey[0])/2)+pa.nodey[0];
-	bool upperFails = false;
-	bool lowerFails = false;
-	int originx = pa.nodex[0];
-	int originy = pa.nodey[0];
-	// check upper path
-	upperFails = hasUpperPath(originx, originy, candidatex, candidatey, scene->shapes);
-	lowerFails = hasLowerPath(originx, originy, candidatex, candidatey, scene->shapes);
-	// end check upper path.
-	// check lower path
-
-
-	// end check lower path
-
-	//	>> first intermediate node = halfway on hypot.
-	//		>> check for empty spot, verify one or more paths is unobstructed
-	//			>> select inter. node and path (Lower has priority) (later we can set priority by chosen node.
-	//		>> else, move inter. node backward on hypot.
-	//
-	//		:xy
-	//
-	//		>> check for clear path to desired node, write
-	//		
-	//			>> next node = halfway on remaining hypot.
-	//				>> check uppper and lower path
-	//					>> select next node
-	//				>> else move node backwards
-	//
-	//		>> goto xy
 	
+	int destinationx = scene->shapes.at(pa->destination)->nodex[shape::TOP]; // the final x destination of the path
+	int destinationy = scene->shapes.at(pa->destination)->nodey[shape::TOP]; // the final y destination of the path
+	
+	int zerox = pa->nodes.at(0)->posx; // the starting x point of the path
+	int zeroy = pa->nodes.at(0)->posy; // the starting y point of the path
+
+	bool upperFails = false; 
+	bool lowerFails = false;
+
+	int hyp_offsetx = 0;
+	int hyp_offsety = 0;
+
+	int hypx_scale = 10;
+	int hypy_scale = trunc((((float)destinationx - (float)zerox) / ((float)destinationy - (float)zeroy))*hypx_scale);
 
 
+	int count = 1;
+	while (hyp_offsetx < (destinationx - zerox) && hyp_offsety < (destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH)
+	{
+		
+
+		
+		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+		if (upperFails)
+		{
+			if (lowerFails)
+			{
+				hyp_offsetx += hypx_scale;
+				hyp_offsety += hypy_scale;
+				exitCode = TK_CODE_BAD_PATH;
+			}
+			else
+			{
+				++count;
+				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
+
+				hyp_offsetx = 0;
+				hyp_offsety = 0;
+
+				zerox = destinationx - hyp_offsetx;
+				zeroy = destinationy - hyp_offsety;
+			}
+			
+		}
+		else 
+		{
+			++count;
+			pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
+
+			hyp_offsetx = 0;
+			hyp_offsety = 0;
+
+			zerox = destinationx - hyp_offsetx;
+			zeroy = destinationy - hyp_offsety;
+		}
+
+		if (destinationx == zerox && destinationy == zeroy)
+		{
+			exitCode = TK_CODE_GOOD_PATH;
+		}
+	}
+
+	if (exitCode != TK_CODE_GOOD_PATH)
+	{
+		// suitable path was not found with this method
+		return TK_CODE_PATH_NOT_FOUND;
+	}
+
+	else
+	{
+		return TK_CODE_PATH_FOUND;
+	}
 
 }
 
@@ -402,14 +457,14 @@ int GetAllEvents(TKSCENE* scene)
 				if (lineGood)
 				{
 					// draw with shapes at last and second to last position
-					scene->paths.push_back(new path(scene->shapes.size(), scene->shapes.size() - 1, 3));
-					PathFind(scene, *scene->paths.back());
+					scene->paths.push_back(new path(scene->shapes.size()-1, scene->shapes.size() - 2, 3));
+					PathFind(scene, scene->paths.back());
 					
 					printf("\n====Line added successfully====\n");
 				}
 				
 			}
-			return TK_CODE_ADDLINE;
+			return TK_CODE_ADD_LINE;
 		}
 		// CLICKED: MIDDLE
 		else
