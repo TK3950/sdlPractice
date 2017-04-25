@@ -49,52 +49,215 @@ bool isInsideBox(int x, int y, shape sh)
 
 bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
 {
-	for (int x = originx; x <= candX; x++)
-	{
-		for (unsigned int i = 0; i < shapes.size()-2; ++i)
-		{
-			if (isInsideBox(x, originy, *shapes.at(i)))
+
+	if (originx < candX && originy < candY)
+	{ // source is above and left
+		for (int x = originx; x <= candX; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
 			{
-				return true;
+				if (isInsideBox(x, originy, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = originy; y <= candY; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(candX, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+
+	}
+	if (originx < candX && originy >= candY)
+	{ // source is below or = and left
+
+		for (int x = originx; x <= candX; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(x, candY, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = candY; y <= originy ; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(originx, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+	}
+
+	if (originx >= candX && originy < candY)
+	{ // source right or = and above
+		for (int x = candX; x <= originx; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(x, originy, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = originy; y <= candY; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(candX, y, *shapes.at(i)))
+				{
+					return true;
+				}
 			}
 		}
 	}
-	for (int y = originy; y <= candY; y++)
-	{
-		for (unsigned int i = 0; i < shapes.size()-2; ++i)
-		{
-			if (isInsideBox(candX, y, *shapes.at(i)))
+	if (originx >= candX && originy >= candY)
+	{ // source is right or = and below or =
+		for (int x = candX; x <= originx; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
 			{
-				return true;
+				if (isInsideBox(x, candY, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = candY; y <= originy; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(originx, y, *shapes.at(i)))
+				{
+					return true;
+				}
 			}
 		}
 	}
+
 	return false;
 }
 // an unobstructed upper-right-angle-path between two points exists
 
 bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
 {
-	for (int y = originy; y <= candY; y++)
-	{
-		for (unsigned int i = 0; i < shapes.size()-2; ++i)
-		{
-			if (isInsideBox(originx, y, *shapes.at(i)))
+	
+	if (originx < candX && originy < candY)
+	{ // source is above and left
+		for (int x = originx; x <= candX; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
 			{
-				return true;
+				if (isInsideBox(x, candY, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+		for (int y = originy; y <= candY; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(originx, y, *shapes.at(i)))
+				{
+					return true;
+				}
 			}
 		}
 	}
-	for (int x = originx; x <= candX; x++)
-	{
-		for (unsigned int i = 0; i < shapes.size()-2; ++i)
-		{
-			if (isInsideBox(x, candY, *shapes.at(i)))
+	if (originx < candX && originy >= candY)
+	{ // source is below or = and left
+
+		for (int x = originx; x <= candX; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
 			{
-				return true;
+				if (isInsideBox(x, originy, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = candY; y <= originy; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(candX, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+	}
+
+	if (originx >= candX && originy < candY)
+	{ // source right or = and above
+		for (int x = candX; x <= originx; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(x, candY, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = originy; y <= candY; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(originx, y, *shapes.at(i)))
+				{
+					return true;
+				}
 			}
 		}
 	}
+	if (originx >= candX && originy >= candY)
+	{ // source is right or = and below or =
+		for (int x = candX; x <= originx; x++)
+		{ // horizontal sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(x, originy, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+
+		for (int y = candY; y <= originy; y++)
+		{ // vertical sweep
+			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			{
+				if (isInsideBox(candX, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+	}
+
 	return false;
 }
 // an unobstructed lower-right-angle-path between two points exists
@@ -136,25 +299,40 @@ int PathFind(TKSCENE* scene, path* pa)
 
 
 	int count = 1;
-	while (hyp_offsetx < (destinationx - zerox) && hyp_offsety < (destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH)
+	
+	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
 	{
 		
-
 		
-		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
-		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
-		if (upperFails)
-		{
-			if (lowerFails)
+		{ // block added for future editing
+
+			upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+			lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+			if (upperFails)
 			{
-				hyp_offsetx += hypx_scale;
-				hyp_offsety += hypy_scale;
-				exitCode = TK_CODE_BAD_PATH;
+				if (lowerFails)
+				{
+					hyp_offsetx += hypx_scale;
+					hyp_offsety += hypy_scale;
+					exitCode = TK_CODE_BAD_PATH;
+				}
+				else
+				{
+					++count;
+					pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
+
+					hyp_offsetx = 0;
+					hyp_offsety = 0;
+
+					zerox = destinationx - hyp_offsetx;
+					zeroy = destinationy - hyp_offsety;
+				}
+
 			}
 			else
 			{
 				++count;
-				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
+				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
 
 				hyp_offsetx = 0;
 				hyp_offsety = 0;
@@ -162,23 +340,13 @@ int PathFind(TKSCENE* scene, path* pa)
 				zerox = destinationx - hyp_offsetx;
 				zeroy = destinationy - hyp_offsety;
 			}
-			
-		}
-		else 
-		{
-			++count;
-			pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
 
-			hyp_offsetx = 0;
-			hyp_offsety = 0;
+			if (destinationx == zerox && destinationy == zeroy)
+			{
+				printf("=====PATH FOUND=====\n");
+				exitCode = TK_CODE_GOOD_PATH;
+			}
 
-			zerox = destinationx - hyp_offsetx;
-			zeroy = destinationy - hyp_offsety;
-		}
-
-		if (destinationx == zerox && destinationy == zeroy)
-		{
-			exitCode = TK_CODE_GOOD_PATH;
 		}
 	}
 
