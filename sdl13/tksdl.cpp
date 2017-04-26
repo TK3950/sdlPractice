@@ -294,15 +294,20 @@ int PathFind(TKSCENE* scene, path* pa)
 	int hyp_offsetx = 0;
 	int hyp_offsety = 0;
 
+	
 	int hypx_scale = 10;
-	int hypy_scale = trunc((((float)destinationx - (float)zerox) / ((float)destinationy - (float)zeroy))*hypx_scale);
+	if (destinationx < zerox)
+	{
+		hypx_scale = -hypx_scale;
+	}
+	int hypy_scale = truncl((((float)destinationx - (float)zerox) / ((float)destinationy - (float)zeroy))*hypx_scale);
 
 
 	int count = 1;
 	
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
-	{
-		
+	{		// offset is less than distance between source point and candidate point
+			// 
 		
 		{ // block added for future editing
 
@@ -320,12 +325,16 @@ int PathFind(TKSCENE* scene, path* pa)
 				{
 					++count;
 					pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
+					// depends on source location.
+					// edit the formulae or add exceptions
+
+					zerox = destinationx - hyp_offsetx;
+					zeroy = destinationy - hyp_offsety;
 
 					hyp_offsetx = 0;
 					hyp_offsety = 0;
 
-					zerox = destinationx - hyp_offsetx;
-					zeroy = destinationy - hyp_offsety;
+
 				}
 
 			}
@@ -334,11 +343,13 @@ int PathFind(TKSCENE* scene, path* pa)
 				++count;
 				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
 
+				zerox = destinationx - hyp_offsetx;
+				zeroy = destinationy - hyp_offsety;
+
 				hyp_offsetx = 0;
 				hyp_offsety = 0;
 
-				zerox = destinationx - hyp_offsetx;
-				zeroy = destinationy - hyp_offsety;
+
 			}
 
 			if (destinationx == zerox && destinationy == zeroy)
@@ -376,7 +387,7 @@ int GetAllEvents(TKSCENE* scene)
 	{
 		int mousex = scene->ee->motion.x;
 		int mousey = scene->ee->motion.y;
-#ifdef _DEBUG
+#ifdef _DEBUG2
 		int keystate = scene->ee->key.state;
 		int keycode = scene->ee->key.keysym.scancode;
 		int buttonstate = scene->ee->button.state;
