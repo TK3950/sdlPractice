@@ -49,81 +49,26 @@ bool isInsideBox(int x, int y, shape sh)
 
 bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
 {
-	// source is upper and left
-	if (originx <= candX && originy <= candY)
+	for (int x = originx; x <= candX; x++)
 	{
-		for (int x = originx; x <= candX; x++)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			if (isInsideBox(x, originy, *shapes.at(i)))
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
-				{
-					return true;
-				}
-			}
-		}
-		for (int y = originy; y <= candY; y++)
-		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
-			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
-
-	// source is lower and right
-	if (originx > candX && originy > candY)
+	for (int y = originy; y <= candY; y++)
 	{
-		for (int x = candX; x <= originx; x++)
+		for (unsigned int i = 0; i < shapes.size()-2; ++i)
 		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			if (isInsideBox(candX, y, *shapes.at(i)))
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
-				{
-					return true;
-				}
-			}
-		}
-		for (int y = candY; y <= originx; y++)
-		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
-			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
-
-	// source is upper and right
-	if (originx <= candX && originy <= candY)
-	{
-		for (int x = originx; x <= candX; x++)
-		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
-			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
-				{
-					return true;
-				}
-			}
-		}
-		for (int y = originy; y <= candY; y++)
-		{
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
-			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
-				{
-					return true;
-				}
-			}
-		}
-	}
-	
 	return false;
 }
 // an unobstructed upper-right-angle-path between two points exists
