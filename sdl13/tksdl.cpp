@@ -298,9 +298,11 @@ int PathFind(TKSCENE* scene, path* pa)
 	int hypx_scale = 10;
 	if (destinationx < zerox)
 	{
-		hypx_scale = -hypx_scale;
+		hypx_scale = -hypx_scale; // move the other way if we're on the other side
 	}
-	int hypy_scale = truncl((((float)destinationx - (float)zerox) / ((float)destinationy - (float)zeroy))*hypx_scale);
+	float dx = (float)destinationx - (float)zerox;
+	float dy = (float)destinationy - (float)zeroy;
+	int hypy_scale = (float)(dy / dx)*hypx_scale;
 
 
 	int count = 1;
@@ -325,9 +327,7 @@ int PathFind(TKSCENE* scene, path* pa)
 				{
 					++count;
 					pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
-					// depends on source location.
-					// edit the formulae or add exceptions
-
+					
 					zerox = destinationx - hyp_offsetx;
 					zeroy = destinationy - hyp_offsety;
 
@@ -341,6 +341,7 @@ int PathFind(TKSCENE* scene, path* pa)
 			else
 			{
 				++count;
+
 				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
 
 				zerox = destinationx - hyp_offsetx;
