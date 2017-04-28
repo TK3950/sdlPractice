@@ -13,23 +13,34 @@ void path::drawPath(SDL_Renderer *r, color* c, path *p)
 			{
 				if (p->nodes.at(i)->branch == node::UPPER)
 				{
-					SDL_RenderDrawLine(r, p->nodes.at(i-1)->posx, p->nodes.at(i-1)->posy, p->nodes.at(i)->posx, p->nodes.at(i-1)->posy);
-					SDL_RenderDrawLine(r, p->nodes.at(i)->posx, p->nodes.at(i-1)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
+					if (p->nodes.at(i - 1)->posy <= p->nodes.at(i)->posy)
+					{
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i)->posx, p->nodes.at(i - 1)->posy);
+						SDL_RenderDrawLine(r, p->nodes.at(i)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
+					}
+					else if (p->nodes.at(i - 1)->posy > p->nodes.at(i)->posy)
+					{
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i - 1)->posx, p->nodes.at(i)->posy);
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
+					}
 				}
 				else if (p->nodes.at(i)->branch == node::LOWER)
 				{
-					SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i-1)->posx, p->nodes.at(i)->posy);
-					SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
-				}
-				else
-				{
+					if (p->nodes.at(i - 1)->posy <= p->nodes.at(i)->posy)
+					{
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i - 1)->posx, p->nodes.at(i)->posy);
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
 
+					}
+					else if (p->nodes.at(i - 1)->posy > p->nodes.at(i)->posy)
+					{
+						SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i)->posx, p->nodes.at(i - 1)->posy);
+						SDL_RenderDrawLine(r, p->nodes.at(i)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
+					}
 				}
+
 			}
-			else
-			{
-				
-			}
+
 		}
 	}
 

@@ -341,8 +341,9 @@ int PathFind(TKSCENE* scene, path* pa)
 			else
 			{
 				++count;
-
 				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
+
+
 
 				zerox = destinationx - hyp_offsetx;
 				zeroy = destinationy - hyp_offsety;
