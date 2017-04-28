@@ -267,21 +267,11 @@ int PathFind(TKSCENE* scene, path* pa)
 	// should not be called while dragging a shape.
 
 	int exitCode = 0;
-	/* THIS IS DRAFT CODE. CLEAN IT BEFORE PUSHING TO BRANCH*/
-
 	scene->shapes.at(pa->source)->UpdateNodes();
 	scene->shapes.at(pa->destination)->UpdateNodes();
 	
-	if ((pa->nodes.empty())) // vector is empty
-	{
-		// add first node
-		pa->nodes.push_back(new node(scene->shapes.at(pa->source)->nodex[shape::TOP], scene->shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
-	}
+	pa->nodes.push_back(new node(scene->shapes.at(pa->source)->nodex[shape::TOP], scene->shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
 
-
-
-	// candidate node methods.
-	
 	int destinationx = scene->shapes.at(pa->destination)->nodex[shape::TOP]; // the final x destination of the path
 	int destinationy = scene->shapes.at(pa->destination)->nodey[shape::TOP]; // the final y destination of the path
 	
@@ -298,7 +288,7 @@ int PathFind(TKSCENE* scene, path* pa)
 	int hypx_scale = 10;
 	if (destinationx < zerox)
 	{
-		hypx_scale = -hypx_scale; // move the other way if we're on the other side
+		hypx_scale = -hypx_scale;
 	}
 	float dx = (float)destinationx - (float)zerox;
 	float dy = (float)destinationy - (float)zeroy;
@@ -308,11 +298,7 @@ int PathFind(TKSCENE* scene, path* pa)
 	int count = 1;
 	
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
-	{		// offset is less than distance between source point and candidate point
-			// 
-		
-		{ // block added for future editing
-
+	{		
 			upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
 			lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
 			if (upperFails)
@@ -327,7 +313,7 @@ int PathFind(TKSCENE* scene, path* pa)
 				{
 					++count;
 					pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
-					
+
 					zerox = destinationx - hyp_offsetx;
 					zeroy = destinationy - hyp_offsety;
 
@@ -336,7 +322,6 @@ int PathFind(TKSCENE* scene, path* pa)
 
 
 				}
-
 			}
 			else
 			{
@@ -356,11 +341,12 @@ int PathFind(TKSCENE* scene, path* pa)
 
 			if (destinationx == zerox && destinationy == zeroy)
 			{
+#ifdef DEBUG2
 				printf("=====PATH FOUND=====\n");
+#endif
 				exitCode = TK_CODE_GOOD_PATH;
 			}
 
-		}
 	}
 
 	if (exitCode != TK_CODE_GOOD_PATH)
@@ -640,8 +626,9 @@ int GetAllEvents(TKSCENE* scene)
 					// draw with shapes at last and second to last position
 					scene->paths.push_back(new path(scene->shapes.size()-1, scene->shapes.size() - 2, 3));
 					PathFind(scene, scene->paths.back());
-					
+#ifdef DEBUG2
 					printf("\n====Line added successfully====\n");
+#endif
 				}
 				
 			}
