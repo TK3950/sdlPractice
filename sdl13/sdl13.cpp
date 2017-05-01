@@ -20,7 +20,7 @@
 
 
 
-extern bool TK_QUIT = false;
+extern bool TK_QUIT = false; // this should be moved
 
 
 
@@ -112,11 +112,11 @@ int main()
 
 	ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 	SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
-	UpdateScreen(scene); // first display
+	scene->UpdateScreen(); // first display
 	
 	while (!TK_QUIT)
 	{
-		int response = GetAllEvents(scene);
+		int response = scene->GetAllEvents();
 		TK_QUIT = (response == 20) ? true : false;
 		
 
@@ -126,7 +126,7 @@ int main()
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
-			UpdateScreen(scene); 
+			scene->UpdateScreen(); 
 		}
 
 	}

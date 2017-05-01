@@ -24,10 +24,13 @@ public:
 	std::vector<path*>		paths;
 	color*					PrimaryColor;
 	color*					SecondaryColor;
+
+	void UpdateScreen();
+	int GetAllEvents();
+	int PathFind(path* pa);
+
 };
 
-void UpdateScreen(TKSCENE* scene);
-int GetAllEvents(TKSCENE* scene);
 bool isInsideBox(int x, int y, shape sh);
 
 #endif
