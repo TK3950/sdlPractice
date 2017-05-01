@@ -18,7 +18,6 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width, height
 		SDL_WINDOW_OPENGL); // window flags
 
-	//s = SDL_LoadBMP(""); // empty path means we don't load an image, we get a clean slate. also returns null, so functionally useless.
 	r = SDL_CreateRenderer(w, -1, 0); // make renderer-type object from screen, assign to renderer object
 	rr = r;
 	ss = s;
@@ -263,13 +262,16 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 // an unobstructed lower-right-angle-path between two points exists
 
 
-int TKSCENE::PathFind(path* pa)
+int TKSCENE::PathFindHypotenuse(path* pa)
 {
 	// should not be called while dragging a shape.
 	pa->validPath = false;
 	int exitCode = 0;
 	shapes.at(pa->source)->UpdateNodes();
 	shapes.at(pa->destination)->UpdateNodes();
+
+	pa->nodes.clear();
+
 	pa->nodes.push_back(new node(shapes.at(pa->source)->nodex[shape::TOP], shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
 	int destinationx = shapes.at(pa->destination)->nodex[shape::TOP]; // the final x destination of the path
 	int destinationy = shapes.at(pa->destination)->nodey[shape::TOP]; // the final y destination of the path
@@ -286,7 +288,7 @@ int TKSCENE::PathFind(path* pa)
 	}
 	float dx = (float)destinationx - (float)zerox;
 	float dy = (float)destinationy - (float)zeroy;
-	int hypy_scale = (float)(dy / dx)*hypx_scale;
+	int hypy_scale = (int)(dy / dx)*hypx_scale;
 	int count = 1;
 
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
@@ -413,6 +415,27 @@ int TKSCENE::GetAllEvents()
 			return ee->key.keysym.scancode;
 		}
 		// KEYPRESS: DEL
+		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
+		{
+			// BOOKMARK
+			// path can be set to a different src/dest pair based on their positions
+			// in path vector. can we make this more persistent? should we used unique ordinal identifiers that can't be reset?
+			// this extends time to pick the src/dest pair
+			for (unsigned int i = 0; i < paths.size(); ++i)
+			{
+				if (i + 1 == paths.size())
+				{
+					PathFindHypotenuse(paths.front());
+				}
+				else
+				{
+					PathFindHypotenuse(paths.front());
+				}
+
+				return ee->key.keysym.scancode;
+			}
+		}
+		// KEYPRESS: F5
 
 		if (ee->button.button == SDL_BUTTON_LEFT)
 		{
@@ -522,6 +545,7 @@ int TKSCENE::GetAllEvents()
 				{
 					shapes.back()->SetHeight(10);
 				}
+
 				return TK_CODE_RESIZE;
 			}
 
@@ -609,7 +633,7 @@ int TKSCENE::GetAllEvents()
 				{
 					// draw with shapes at last and second to last position
 					paths.push_back(new path(shapes.size()-1, shapes.size() - 2, 3));
-					PathFind(paths.back());
+					PathFindHypotenuse(paths.back());
 					if (!paths.back()->validPath)
 					{
 						paths.pop_back();

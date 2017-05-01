@@ -27,7 +27,7 @@ public:
 
 	void UpdateScreen();
 	int GetAllEvents();
-	int PathFind(path* pa);
+	int PathFindHypotenuse(path* pa);
 
 };
 

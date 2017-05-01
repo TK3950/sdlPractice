@@ -1,10 +1,11 @@
 // sdl13.cpp : Defines the entry point for the console application.
 // 
 
-// TODO: clean/privatize shape class, add line & arrow defintions
-//		standardize event handler returns
-//		add nodes to shapes for line connections
-//		have lines remain at right angles
+// TODO: search for non-hypotenuse paths
+// paths should follow shapes that are moved
+// source and destination nodes should not be stuck on the top of the shape
+// manually movable paths?
+// nodes should be more visisble?
 
 
 #include <vector>
@@ -17,8 +18,6 @@
 
 #define TK_WINDOW_WIDTH 1000
 #define TK_WINDOW_HEIGHT 680
-
-
 
 extern bool TK_QUIT = false; // this should be moved
 
@@ -118,15 +117,14 @@ int main()
 	{
 		int response = scene->GetAllEvents();
 		TK_QUIT = (response == 20) ? true : false;
-		
+		// all re-render events return odd, and all no-render events return even, then check event response
 
-		// consider making all re-render events return odd, and all no-render events return even, then check event response
-		if (response != 0) 
+		if (response != 0)
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
-			scene->UpdateScreen(); 
+			scene->UpdateScreen();
 		}
 
 	}

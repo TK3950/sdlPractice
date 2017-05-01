@@ -38,7 +38,6 @@ public:
 
 
 	void drawPath(SDL_Renderer *r, color* c, path *s);
-	int PathFind();
 	unsigned int source;
 	unsigned int destination;
 

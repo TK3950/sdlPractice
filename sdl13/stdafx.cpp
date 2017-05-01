@@ -90,6 +90,7 @@ void shape::drawRhombus(SDL_Renderer *r, shape t) {
 	SDL_RenderDrawLine(r, t.GetPosX() + t.width, t.GetPosY() + t.height / 2, t.GetPosX() + t.width / 2, t.GetPosY() + t.height);
 
 }
+
 void shape::drawRectangle(SDL_Renderer *r, shape t) {
 
 	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPosX() + t.width, t.GetPosY());
