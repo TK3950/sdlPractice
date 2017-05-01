@@ -27,19 +27,23 @@ public:
 
 class path {
 public:
-	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape2), destination(shape1) {
+	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape2), destination(shape1), validPath(false) {
 		
 	}
-
+	/*
+	Each path might be better classified as a link. 
+	When selecting two shapes for a path, it links these two shapes in memory
+	from source to destination. PathFind() should try to create a complete path from source to destination.
+	*/
 
 
 	void drawPath(SDL_Renderer *r, color* c, path *s);
-
+	int PathFind();
 	unsigned int source;
 	unsigned int destination;
 
 	std::vector<node*> nodes;
-
+	bool validPath;
 	
 
 };

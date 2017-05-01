@@ -4,7 +4,7 @@
 bool dragMode;
 bool editMode;
 bool lineMode;
-bool lineGood;
+bool sourceIsNotDestination;
 int selectedShape;
 // these variables are defined here to maintain persistence. Look for a better way to achieve this
 // such as in a status class.
@@ -262,6 +262,7 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 }
 // an unobstructed lower-right-angle-path between two points exists
 
+
 int PathFind(TKSCENE* scene, path* pa)
 {
 	// should not be called while dragging a shape.
@@ -269,22 +270,22 @@ int PathFind(TKSCENE* scene, path* pa)
 	int exitCode = 0;
 	scene->shapes.at(pa->source)->UpdateNodes();
 	scene->shapes.at(pa->destination)->UpdateNodes();
-	
+
 	pa->nodes.push_back(new node(scene->shapes.at(pa->source)->nodex[shape::TOP], scene->shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
 
 	int destinationx = scene->shapes.at(pa->destination)->nodex[shape::TOP]; // the final x destination of the path
 	int destinationy = scene->shapes.at(pa->destination)->nodey[shape::TOP]; // the final y destination of the path
-	
+
 	int zerox = pa->nodes.at(0)->posx; // the starting x point of the path
 	int zeroy = pa->nodes.at(0)->posy; // the starting y point of the path
 
-	bool upperFails = false; 
+	bool upperFails = false;
 	bool lowerFails = false;
 
 	int hyp_offsetx = 0;
 	int hyp_offsety = 0;
 
-	
+
 	int hypx_scale = 10;
 	if (destinationx < zerox)
 	{
@@ -296,39 +297,23 @@ int PathFind(TKSCENE* scene, path* pa)
 
 
 	int count = 1;
-	
+
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
-	{		
-			upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
-			lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
-			if (upperFails)
+	{
+		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, scene->shapes);
+		if (upperFails)
+		{
+			if (lowerFails)
 			{
-				if (lowerFails)
-				{
-					hyp_offsetx += hypx_scale;
-					hyp_offsety += hypy_scale;
-					exitCode = TK_CODE_BAD_PATH;
-				}
-				else
-				{
-					++count;
-					pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
-
-					zerox = destinationx - hyp_offsetx;
-					zeroy = destinationy - hyp_offsety;
-
-					hyp_offsetx = 0;
-					hyp_offsety = 0;
-
-
-				}
+				hyp_offsetx += hypx_scale;
+				hyp_offsety += hypy_scale;
+				exitCode = TK_CODE_BAD_PATH;
 			}
 			else
 			{
 				++count;
-				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
-
-
+				pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::LOWER)); // select lower
 
 				zerox = destinationx - hyp_offsetx;
 				zeroy = destinationy - hyp_offsety;
@@ -338,14 +323,30 @@ int PathFind(TKSCENE* scene, path* pa)
 
 
 			}
+		}
+		else
+		{
+			++count;
+			pa->nodes.push_back(new node(destinationx - hyp_offsetx, destinationy - hyp_offsety, node::UPPER)); // select upper
 
-			if (destinationx == zerox && destinationy == zeroy)
-			{
+
+
+			zerox = destinationx - hyp_offsetx;
+			zeroy = destinationy - hyp_offsety;
+
+			hyp_offsetx = 0;
+			hyp_offsety = 0;
+
+
+		}
+
+		if (destinationx == zerox && destinationy == zeroy)
+		{
 #ifdef DEBUG2
-				printf("=====PATH FOUND=====\n");
+			printf("=====PATH FOUND=====\n");
 #endif
-				exitCode = TK_CODE_GOOD_PATH;
-			}
+			exitCode = TK_CODE_GOOD_PATH;
+		}
 
 	}
 
@@ -362,6 +363,7 @@ int PathFind(TKSCENE* scene, path* pa)
 
 }
 
+
 void UpdateScreen(TKSCENE* scene)
 {
 	SDL_RenderCopy(scene->rr, scene->tt, NULL, NULL);
@@ -370,7 +372,7 @@ void UpdateScreen(TKSCENE* scene)
 
 int GetAllEvents(TKSCENE* scene)
 {
-	lineGood = false;
+	sourceIsNotDestination = false;
 	while (SDL_PollEvent(scene->ee) != 0)
 	{
 		int mousex = scene->ee->motion.x;
@@ -611,7 +613,7 @@ int GetAllEvents(TKSCENE* scene)
 										{
 											scene->shapes.push_back(scene->shapes.at(selectedShape));
 											scene->shapes.erase(scene->shapes.begin() + selectedShape);
-											lineGood = true; // source shape is not destination shape
+											sourceIsNotDestination = true; // source shape is not destination shape
 										}
 									}
 								}
@@ -621,14 +623,22 @@ int GetAllEvents(TKSCENE* scene)
 				}
 
 				// now we make the line
-				if (lineGood)
+				if (sourceIsNotDestination)
 				{
 					// draw with shapes at last and second to last position
 					scene->paths.push_back(new path(scene->shapes.size()-1, scene->shapes.size() - 2, 3));
 					PathFind(scene, scene->paths.back());
+					if (scene->paths.back()->validPath)
+					{
+						scene->paths.pop_back();
+						printf("\n====Path not valid====\n");
+					}
+					else
+					{
 #ifdef DEBUG2
-					printf("\n====Line added successfully====\n");
+						printf("\n====Line added successfully====\n");
 #endif
+					}
 				}
 				
 			}
