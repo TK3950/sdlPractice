@@ -1,8 +1,8 @@
-// stdafx.cpp : source file that includes just the standard includes
+// shape.cpp : source file that includes just the standard includes
 // sdl13.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
+// shape.obj will contain the pre-compiled type information
 #pragma once
-#include "stdafx.h"
+#include "shape.h"
 #include <SDL\SDL.h>
 #define BRESENHAM 1
 

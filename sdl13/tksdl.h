@@ -3,7 +3,7 @@
 #include <list>
 #include <vector>
 #include "paths.h"
-#include "stdafx.h"
+#include "shape.h"
 #include "tkcodes.h"
 #include <SDL/SDL.h>
 

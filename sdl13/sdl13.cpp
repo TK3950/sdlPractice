@@ -1,10 +1,11 @@
 // sdl13.cpp : Defines the entry point for the console application.
 // 
 
-// TODO: search for non-hypotenuse paths
+// TODO: Vertical paths are not valid. why?
+// search for non-hypotenuse paths
 // paths should follow shapes that are moved
 // source and destination nodes should not be stuck on the top of the shape
-// manually movable paths?
+// manually movable paths? by selecting intermediate nodes
 // nodes should be more visisble?
 
 

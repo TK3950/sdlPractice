@@ -152,7 +152,7 @@
   <ItemGroup>
     <ClInclude Include="color.h" />
     <ClInclude Include="paths.h" />
-    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="shape.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tkcodes.h" />
     <ClInclude Include="tksdl.h" />
@@ -161,7 +161,7 @@
     <ClCompile Include="color.cpp" />
     <ClCompile Include="paths.cpp" />
     <ClCompile Include="sdl13.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="shape.cpp" />
     <ClCompile Include="tksdl.cpp" />
   </ItemGroup>
   <ItemGroup>

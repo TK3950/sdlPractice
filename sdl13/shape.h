@@ -1,4 +1,4 @@
-// stdafx.h : include file for standard system include files,
+// shape.h : include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //
@@ -15,8 +15,6 @@
 #include <tchar.h>
 #define TK_WINDOW_WIDTH 1000
 #define TK_WINDOW_HEIGHT 680
-
-// TODO: develop path, line, and pathfinding
 
 class menu {
 public:

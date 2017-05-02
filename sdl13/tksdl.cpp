@@ -414,13 +414,14 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	}
 
 }
-
+// Finds right-angle paths with nodes along the hypotenuse between the source and destination.
 
 void TKSCENE::UpdateScreen()
 {
 	SDL_RenderCopy(rr, tt, NULL, NULL);
 	SDL_RenderPresent(rr); // show
 }
+// forces the renderer to update and redisplay
 
 int TKSCENE::GetAllEvents()
 {
@@ -488,8 +489,6 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: DEL
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
 		{
-			// BOOKMARK
-			// paths are not validated on refresh
 			for (unsigned int i = 0; i < paths.size(); ++i)
 			{
 				PathFindHypotenuse(paths.at(i));
@@ -719,3 +718,4 @@ int TKSCENE::GetAllEvents()
 	}
 	return 0; 
 }
+// process events
