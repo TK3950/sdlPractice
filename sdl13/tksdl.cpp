@@ -1,14 +1,6 @@
 #pragma once
 #include "tksdl.h"
 
-bool dragMode;
-bool editMode;
-bool lineMode;
-bool sourceIsNotDestination;
-int selectedShape;
-// these variables are defined here to maintain persistence. Look for a better way to achieve this
-// such as in a status class.
-
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
@@ -359,7 +351,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	int hypy_scale = (int)((dy / dx)*hypx_scale);
 	int count = 1;
 
-	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
+	while (hyp_offsetx <= abs(destinationx - zerox) && hyp_offsety <= abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
 	{
 		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
 		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
@@ -425,6 +417,13 @@ void TKSCENE::UpdateScreen()
 
 int TKSCENE::GetAllEvents()
 {
+	static bool dragMode;
+	static bool editMode;
+	static bool lineMode;
+	static bool sourceIsNotDestination;
+	static int selectedShape;
+
+
 	sourceIsNotDestination = false;
 	while (SDL_PollEvent(ee) != 0)
 	{
