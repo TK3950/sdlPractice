@@ -27,7 +27,7 @@ public:
 
 class path {
 public:
-	path(unsigned int shape1, unsigned int shape2, unsigned int node_count) : source(shape2), destination(shape1), validPath(false) {
+	path(unsigned int shape1Id, unsigned int shape2Id, unsigned int node_count) : sourceId(shape2Id), destinationId(shape1Id), validPath(false) {
 		
 	}
 	/*
@@ -38,8 +38,8 @@ public:
 
 
 	void drawPath(SDL_Renderer *r, color* c, path *s);
-	unsigned int source;
-	unsigned int destination;
+	unsigned int sourceId;
+	unsigned int destinationId;
 
 	std::vector<node*> nodes;
 	bool validPath;

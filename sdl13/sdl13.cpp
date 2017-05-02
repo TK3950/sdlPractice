@@ -19,16 +19,14 @@
 #define TK_WINDOW_WIDTH 1000
 #define TK_WINDOW_HEIGHT 680
 
-extern bool TK_QUIT = false; // this should be moved
-
-
+extern bool TK_QUIT = false; // TODO: this should be moved
 
 void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes) // Simple method to render all shapes in a non-empty list
 {
 	
 	if (!(shapes.empty()))
 	{
-		for (unsigned int i = 0; i < shapes.size(); ++i)
+		for (unsigned int i = 0; i <= shapes.size()-1; ++i)
 		{
 			// look for shapes that escape our bounds
 			// and return them to within the bounds
@@ -50,13 +48,13 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->GetHeight());
 			}
 
-			if (i + 1 == shapes.size())
+			if (i == shapes.size()-1) // back of vector
 			{
-				shapes.front()->shape::drawShape(re, ac, shapes.at(i)); // draw current shape into renderer
+				shapes.front()->shape::drawShape(re, ac, shapes.at(i)); // draw active shape into renderer
 			}
 			else
 			{
-				shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw current shape into renderer
+				shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw other shape into renderer
 			}
 		}
 	}
@@ -68,16 +66,10 @@ void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<pat
 
 	if (!(paths.empty()))
 	{
-		for (unsigned int i = 0; i < paths.size(); ++i)
+		//
+		for (unsigned int i = 0; i < paths.size(); ++i) 
 		{
-			if (i + 1 == paths.size())
-			{
-				paths.front()->path::drawPath(re, ac, paths.at(i)); // draw current path into renderer
-			}
-			else
-			{
-				paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
-			}
+			paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
 		}
 	}
 

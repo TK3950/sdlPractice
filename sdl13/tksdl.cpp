@@ -267,14 +267,34 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	// should not be called while dragging a shape.
 	pa->validPath = false;
 	int exitCode = 0;
-	shapes.at(pa->source)->UpdateNodes();
-	shapes.at(pa->destination)->UpdateNodes();
+
+	unsigned int source, destination;
+
+	for (unsigned int i = 0; i < shapes.size(); ++i)
+	{
+		if (shapes.at(i)->id == pa->sourceId)
+		{
+			source = i;
+		}
+	}
+
+	for (unsigned int i = 0; i < shapes.size(); ++i)
+	{
+		if (shapes.at(i)->id == pa->destinationId)
+		{
+			destination = i;
+		}
+	}
+
+
+	shapes.at(source)->UpdateNodes();
+	shapes.at(destination)->UpdateNodes();
 
 	pa->nodes.clear();
 
-	pa->nodes.push_back(new node(shapes.at(pa->source)->nodex[shape::TOP], shapes.at(pa->source)->nodey[shape::TOP], node::NONE));
-	int destinationx = shapes.at(pa->destination)->nodex[shape::TOP]; // the final x destination of the path
-	int destinationy = shapes.at(pa->destination)->nodey[shape::TOP]; // the final y destination of the path
+	pa->nodes.push_back(new node(shapes.at(source)->nodex[shape::TOP], shapes.at(source)->nodey[shape::TOP], node::NONE));
+	int destinationx = shapes.at(destination)->nodex[shape::TOP]; // the final x destination of the path
+	int destinationy = shapes.at(destination)->nodey[shape::TOP]; // the final y destination of the path
 	int zerox = pa->nodes.at(0)->posx; // the starting x point of the path
 	int zeroy = pa->nodes.at(0)->posy; // the starting y point of the path
 	bool upperFails = false;
@@ -288,7 +308,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	}
 	float dx = (float)destinationx - (float)zerox;
 	float dy = (float)destinationy - (float)zeroy;
-	int hypy_scale = (int)(dy / dx)*hypx_scale;
+	int hypy_scale = (int)((dy / dx)*hypx_scale);
 	int count = 1;
 
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
@@ -325,7 +345,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 
 		if (destinationx == zerox && destinationy == zeroy)
 		{
-#ifdef DEBUG2
+#ifdef _DEBUG
 			printf("=====PATH FOUND=====\n");
 #endif
 			exitCode = TK_CODE_GOOD_PATH;
@@ -388,19 +408,22 @@ int TKSCENE::GetAllEvents()
 
 		if (ee->key.keysym.scancode == SDL_SCANCODE_1 && ee->key.state == SDL_PRESSED)
 		{
-			shapes.push_back(new shape(shape::TK_RHOMBUS, PrimaryColor, 0, 0, 100, 50));
+			shapes.push_back(new shape(shape::TK_RHOMBUS, PrimaryColor, 0, 0, 100, 50, shapeIterator));
+			shapeIterator++;
 			return ee->key.keysym.scancode;
 		}
 		// KEYPRESS: 1
 		if (ee->key.keysym.scancode == SDL_SCANCODE_2 && ee->key.state == SDL_PRESSED)
 		{
-			shapes.push_back(new shape(shape::TK_RECTANGLE, PrimaryColor, 0, 0, 100, 50));
+			shapes.push_back(new shape(shape::TK_RECTANGLE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
+			shapeIterator++;
 			return ee->key.keysym.scancode;
 		}
 		// KEYPRESS: 2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_3 && ee->key.state == SDL_PRESSED)
 		{
-			shapes.push_back(new shape(shape::TK_ELLIPSE, PrimaryColor, 0, 0, 100, 50));
+			shapes.push_back(new shape(shape::TK_ELLIPSE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
+			shapeIterator++;
 			return ee->key.keysym.scancode;
 		}
 		// KEYPRESS: 3
@@ -418,22 +441,12 @@ int TKSCENE::GetAllEvents()
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
 		{
 			// BOOKMARK
-			// path can be set to a different src/dest pair based on their positions
-			// in path vector. can we make this more persistent? should we used unique ordinal identifiers that can't be reset?
-			// this extends time to pick the src/dest pair
+			// new paths are not validating paths
 			for (unsigned int i = 0; i < paths.size(); ++i)
 			{
-				if (i + 1 == paths.size())
-				{
-					PathFindHypotenuse(paths.front());
-				}
-				else
-				{
-					PathFindHypotenuse(paths.front());
-				}
-
-				return ee->key.keysym.scancode;
+				PathFindHypotenuse(paths.at(i));
 			}
+			return ee->key.keysym.scancode;
 		}
 		// KEYPRESS: F5
 
@@ -524,6 +537,7 @@ int TKSCENE::GetAllEvents()
 			return TK_CODE_RESIZE;
 		}
 		// CLICKED: RIGHT
+
 																				// consider #define'ing
 		if (ee->button.button == 4 && editMode && !shapes.empty()) // right click held + drag is 4 instead of 3
 		{
@@ -552,15 +566,11 @@ int TKSCENE::GetAllEvents()
 		}
 		// HOLD-CLICK: RIGHT
 
-
 		if (ee->button.button != SDL_BUTTON_RIGHT && ee->button.button != 4)
 		{
 			editMode = false;
 		}
 		// NOT-CLICKED && NOT-HELD: RIGHT
-
-
-
 
 		if (ee->button.button == SDL_BUTTON_MIDDLE)
 		{
@@ -632,7 +642,9 @@ int TKSCENE::GetAllEvents()
 				if (sourceIsNotDestination)
 				{
 					// draw with shapes at last and second to last position
-					paths.push_back(new path(shapes.size()-1, shapes.size() - 2, 3));
+
+
+					paths.push_back(new path(shapes.at(shapes.size() - 1)->id, shapes.at(shapes.size() - 2)->id, 3));
 					PathFindHypotenuse(paths.back());
 					if (!paths.back()->validPath)
 					{

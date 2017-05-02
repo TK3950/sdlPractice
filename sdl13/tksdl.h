@@ -29,6 +29,9 @@ public:
 	int GetAllEvents();
 	int PathFindHypotenuse(path* pa);
 
+
+	unsigned int shapeIterator;
+	unsigned int pathIterator;
 };
 
 bool isInsideBox(int x, int y, shape sh);

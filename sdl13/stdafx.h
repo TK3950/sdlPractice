@@ -44,8 +44,8 @@ public:
 		LEFT,
 	};
 
-	shape(form f, color* c, int x, int y, int w, int h)
-		: width(w), height(h), posx(x), posy(y), fo(f), co(c), pointx(x + w), pointy(y + h)
+	shape(form f, color* c, int x, int y, int w, int h, unsigned int identifier)
+		: width(w), height(h), posx(x), posy(y), fo(f), co(c), pointx(x + w), pointy(y + h), id(identifier)
 		{
 			
 		}
@@ -90,6 +90,8 @@ public:
 
 	int nodex[4];
 	int nodey[4];
+
+	unsigned int id;
 
 
 private:
