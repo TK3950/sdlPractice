@@ -459,32 +459,32 @@ int TKSCENE::GetAllEvents()
 		{
 			shapes.push_back(new shape(shape::TK_RHOMBUS, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
-			return ee->key.keysym.scancode;
+			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 1
 		if (ee->key.keysym.scancode == SDL_SCANCODE_2 && ee->key.state == SDL_PRESSED)
 		{
 			shapes.push_back(new shape(shape::TK_RECTANGLE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
-			return ee->key.keysym.scancode;
+			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_3 && ee->key.state == SDL_PRESSED)
 		{
 			shapes.push_back(new shape(shape::TK_ELLIPSE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
-			return ee->key.keysym.scancode;
+			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 3
 		if (ee->key.keysym.scancode == SDL_SCANCODE_Q && ee->key.state == SDL_PRESSED)
 		{
-			return ee->key.keysym.scancode;
+			return TK_CODE_QUITTING;
 		}
 		// KEYPRESS: Q
 		if (ee->key.keysym.scancode == SDL_SCANCODE_DELETE && ee->key.state == SDL_PRESSED)
 		{
 			shapes.pop_back();
-			return ee->key.keysym.scancode;
+			return TK_CODE_DELETE_SHAPE;
 		}
 		// KEYPRESS: DEL
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
@@ -493,7 +493,7 @@ int TKSCENE::GetAllEvents()
 			{
 				PathFindHypotenuse(paths.at(i));
 			}
-			return ee->key.keysym.scancode;
+			return TK_CODE_REFRESH_PATHS;
 		}
 		// KEYPRESS: F5
 

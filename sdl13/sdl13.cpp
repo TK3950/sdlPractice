@@ -109,10 +109,10 @@ int main()
 	while (!TK_QUIT)
 	{
 		int response = scene->GetAllEvents();
-		TK_QUIT = (response == 20) ? true : false;
-		// all re-render events return odd, and all no-render events return even, then check event response
+		TK_QUIT = (response == TK_CODE_QUITTING) ? true : false;
 
-		if (response != 0)
+		// all re-render events return odd, and all no-render events return even, then check event response
+		if (response % 2 == 1)
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);

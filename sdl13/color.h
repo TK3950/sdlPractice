@@ -9,12 +9,4 @@ public:
 	int b;
 	int a;
 };
-
-color TK_RED	(255,	0,		0,		255);
-color TK_GREEN	(0,		255,	0,		255);
-color TK_BLUE	(0,		0,		255,	255);
-
-color TK_CYAN	(0,		 255,	255,	255);
-
-
 #endif
