@@ -53,22 +53,28 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	{ // source is above and left
 		for (int x = originx; x <= candX; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, originy, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = originy; y <= candY; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(candX, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -80,22 +86,28 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 
 		for (int x = originx; x <= candX; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, candY, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, candY, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = candY; y <= originy ; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(originx, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(originx, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -106,22 +118,28 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	{ // source right or = and above
 		for (int x = candX; x <= originx; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, originy, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = originy; y <= candY; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(candX, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -130,22 +148,28 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	{ // source is right or = and below or =
 		for (int x = candX; x <= originx; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, candY, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, candY, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = candY; y <= originy; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(originx, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(originx, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -164,9 +188,12 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 		{ // horizontal sweep
 			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{ // BOOKMARK: src/dest pair not guaranteed to be at back of vector, please ensure they are excludd from this check
-				if (isInsideBox(x, candY, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, candY, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -174,9 +201,12 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 		{ // vertical sweep
 			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(originx, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(originx, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -186,22 +216,28 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 
 		for (int x = originx; x <= candX; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, originy, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = candY; y <= originy; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(candX, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -212,22 +248,28 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 	{ // source right or = and above
 		for (int x = candX; x <= originx; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, candY, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, candY, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = originy; y <= candY; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(originx, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(originx, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -236,22 +278,28 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 	{ // source is right or = and below or =
 		for (int x = candX; x <= originx; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(x, originy, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(x, originy, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
 
 		for (int y = candY; y <= originy; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
-				if (isInsideBox(candX, y, *shapes.at(i)))
+				if (i != src && i != dest)
 				{
-					return true;
+					if (isInsideBox(candX, y, *shapes.at(i)))
+					{
+						return true;
+					}
 				}
 			}
 		}
@@ -313,8 +361,8 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 
 	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
 	{
-		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes);
-		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes);
+		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
+		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
 		if (upperFails)
 		{
 			if (lowerFails)
