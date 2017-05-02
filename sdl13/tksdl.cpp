@@ -46,7 +46,7 @@ bool isInsideBox(int x, int y, shape sh)
 }
 // check if a point is within the bounding box of a shape
 
-bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
+bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes, unsigned int src, unsigned int dest)
 {
 
 	if (originx < candX && originy < candY)
@@ -155,15 +155,15 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 }
 // an unobstructed upper-right-angle-path between two points exists
 
-bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes)
+bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes, unsigned int src, unsigned int dest)
 {
 	
 	if (originx < candX && originy < candY)
 	{ // source is above and left
 		for (int x = originx; x <= candX; x++)
 		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
-			{
+			for (unsigned int i = 0; i < shapes.size(); ++i)
+			{ // BOOKMARK: src/dest pair not guaranteed to be at back of vector, please ensure they are excludd from this check
 				if (isInsideBox(x, candY, *shapes.at(i)))
 				{
 					return true;
@@ -172,7 +172,7 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 		}
 		for (int y = originy; y <= candY; y++)
 		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size() - 2; ++i)
+			for (unsigned int i = 0; i < shapes.size(); ++i)
 			{
 				if (isInsideBox(originx, y, *shapes.at(i)))
 				{
