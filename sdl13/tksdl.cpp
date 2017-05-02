@@ -301,6 +301,13 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 }
 // an unobstructed lower-right-angle-path between two points exists
 
+void TKSCENE::RefreshPaths()
+{
+	for (unsigned int i = 0; i < paths.size(); ++i)
+	{
+		PathFindHypotenuse(paths.at(i));
+	}
+}
 
 int TKSCENE::PathFindHypotenuse(path* pa)
 {
@@ -488,10 +495,7 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: DEL
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
 		{
-			for (unsigned int i = 0; i < paths.size(); ++i)
-			{
-				PathFindHypotenuse(paths.at(i));
-			}
+			RefreshPaths();
 			return TK_CODE_REFRESH_PATHS;
 		}
 		// KEYPRESS: F5

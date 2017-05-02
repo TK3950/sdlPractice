@@ -1,9 +1,7 @@
 // sdl13.cpp : Defines the entry point for the console application.
 // 
 
-// TODO: Vertical paths are not valid. why?
-// search for non-hypotenuse paths
-// paths should follow shapes that are moved
+// TODO: search for non-hypotenuse paths
 // source and destination nodes should not be stuck on the top of the shape
 // manually movable paths? by selecting intermediate nodes
 // nodes should be more visisble?
@@ -115,6 +113,10 @@ int main()
 		if (response % 2 == 1)
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
+			if (response == TK_CODE_DRAG || response == TK_CODE_RESIZE)
+			{
+				scene->RefreshPaths();
+			}
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
 			scene->UpdateScreen();
