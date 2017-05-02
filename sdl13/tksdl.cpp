@@ -441,7 +441,7 @@ int TKSCENE::GetAllEvents()
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
 		{
 			// BOOKMARK
-			// new paths are not validating paths
+			// paths are not validated on refresh
 			for (unsigned int i = 0; i < paths.size(); ++i)
 			{
 				PathFindHypotenuse(paths.at(i));
