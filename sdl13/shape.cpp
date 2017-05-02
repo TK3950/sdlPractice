@@ -1,8 +1,8 @@
-// stdafx.cpp : source file that includes just the standard includes
+// shape.cpp : source file that includes just the standard includes
 // sdl13.pch will be the pre-compiled header
-// stdafx.obj will contain the pre-compiled type information
+// shape.obj will contain the pre-compiled type information
 #pragma once
-#include "stdafx.h"
+#include "shape.h"
 #include <SDL\SDL.h>
 #define BRESENHAM 1
 
@@ -23,16 +23,31 @@ void shape::SetPoints(int newX, int newY)
 	pointy = newY;
 }
 
+int shape::GetWidth()
+{
+	return width;
+}
+int shape::GetHeight()
+{
+	return height;
+}
+void shape::SetWidth(int newWidth)
+{
+	width = newWidth;
+}
+void shape::SetHeight(int newHeight)
+{
+	height = newHeight;
+}
+
 int shape::GetPosX()
 {
 	return posx;
 }
-
 int shape::GetPosY()
 {
 	return posy;
 }
-
 void shape::SetPos(int newX, int newY)
 {
 	posx = newX;
@@ -54,14 +69,6 @@ void shape::drawShape(SDL_Renderer *r, color* c, shape *s)
 		case TK_ELLIPSE:
 			drawEllipse(r, *s);
 			break;
-		case TK_LINE:
-			drawLine(r, *s);
-			break;
-		case TK_ARROW:
-			drawArrow(r, *s);
-			break;
-
-
 	}
 }
 
@@ -83,6 +90,7 @@ void shape::drawRhombus(SDL_Renderer *r, shape t) {
 	SDL_RenderDrawLine(r, t.GetPosX() + t.width, t.GetPosY() + t.height / 2, t.GetPosX() + t.width / 2, t.GetPosY() + t.height);
 
 }
+
 void shape::drawRectangle(SDL_Renderer *r, shape t) {
 
 	SDL_RenderDrawLine(r, t.GetPosX(), t.GetPosY(), t.GetPosX() + t.width, t.GetPosY());

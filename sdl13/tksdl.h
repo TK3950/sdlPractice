@@ -2,29 +2,38 @@
 #define _TKSDL_H 1
 #include <list>
 #include <vector>
-#include "stdafx.h"
+#include "paths.h"
+#include "shape.h"
+#include "tkcodes.h"
 #include <SDL/SDL.h>
 
 
 
 class TKSCENE {
 public:
-	TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, color* pc, color* sc);
+	TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc);
 	
 	
 	
-	SDL_Renderer*	rr;
-	SDL_Surface*	ss;
-	SDL_Window*		ww;
-	SDL_Event*		ee;
-	SDL_Texture*	tt;
-	std::vector<shape*> shapes;
-	std::vector<menu*> menus;
-	color* PrimaryColor;
-	color* SecondaryColor;
+	SDL_Renderer*			rr;
+	SDL_Surface*			ss;
+	SDL_Window*				ww;
+	SDL_Event*				ee;
+	SDL_Texture*			tt;
+	std::vector<shape*>		shapes;
+	std::vector<path*>		paths;
+	color*					PrimaryColor;
+	color*					SecondaryColor;
+
+	void UpdateScreen();
+	int GetAllEvents();
+	int PathFindHypotenuse(path* pa);
+
+
+	unsigned int shapeIterator;
+	unsigned int pathIterator;
 };
 
-void UpdateScreen(TKSCENE* sc);
-int GetAllEvents(TKSCENE* scene);
+bool isInsideBox(int x, int y, shape sh);
 
 #endif
