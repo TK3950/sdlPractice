@@ -1,6 +1,8 @@
 #pragma once
 #include "tksdl.h"
 
+// TODO: Rewrite hasLowerPath() to mirror the style of the new hasUpperPath()
+
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
@@ -38,136 +40,79 @@ bool isInsideBox(int x, int y, shape sh)
 }
 // check if a point is within the bounding box of a shape
 
+bool hasHorizontalLine(int lowx, int y, int highx, std::vector<shape*> shapes, unsigned int src, unsigned int dest)
+{
+	
+	for (int x = lowx; x <= highx; x++)
+	{ // horizontal sweep
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (i != src && i != dest)
+			{
+				if (isInsideBox(x, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+	}
+}
+
+bool hasVerticalLine(int lowy, int x, int highy, std::vector<shape*> shapes, unsigned int src, unsigned int dest)
+{
+
+	for (int y = lowy; y <= highy; y++)
+	{ // vertical sweep
+		for (unsigned int i = 0; i < shapes.size(); ++i)
+		{
+			if (i != src && i != dest)
+			{
+				if (isInsideBox(x, y, *shapes.at(i)))
+				{
+					return true;
+				}
+			}
+		}
+	}
+}
+
 bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<shape*> shapes, unsigned int src, unsigned int dest)
 {
+	bool horizontalFails = false;
+	bool verticalFails = false;
 
 	if (originx < candX && originy < candY)
 	{ // source is above and left
-		for (int x = originx; x <= candX; x++)
-		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(x, originy, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		for (int y = originy; y <= candY; y++)
-		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(candX, y, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-
+		horizontalFails = hasHorizontalLine(originx, originy, candX, shapes, src, dest);
+		//					lowx	y		highx
+		verticalFails = hasVerticalLine(originy, candX, candY, shapes, src, dest);
+		//					lowy	x		highy
 	}
-	if (originx < candX && originy >= candY)
+
+	else if (originx < candX && originy >= candY)
 	{ // source is below or = and left
-
-		for (int x = originx; x <= candX; x++)
-		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(x, candY, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		for (int y = candY; y <= originy ; y++)
-		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(originx, y, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
+		horizontalFails = hasHorizontalLine(originx, originy, candX, shapes, src, dest);
+		//					lowx	y		highx
+		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
+		//					lowy	x		highy
 	}
 
-	if (originx >= candX && originy < candY)
+	else if (originx >= candX && originy < candY)
 	{ // source right or = and above
-		for (int x = candX; x <= originx; x++)
-		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(x, originy, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		for (int y = originy; y <= candY; y++)
-		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(candX, y, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
+		horizontalFails = hasHorizontalLine(candX, originy, originx, shapes, src, dest);
+		//					lowx	y		highx
+		verticalFails = hasVerticalLine(originy, candX, candY, shapes, src, dest);
+		//					lowy	x		highy
 	}
-	if (originx >= candX && originy >= candY)
+	else if (originx >= candX && originy >= candY)
 	{ // source is right or = and below or =
-		for (int x = candX; x <= originx; x++)
-		{ // horizontal sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(x, candY, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		for (int y = candY; y <= originy; y++)
-		{ // vertical sweep
-			for (unsigned int i = 0; i < shapes.size(); ++i)
-			{
-				if (i != src && i != dest)
-				{
-					if (isInsideBox(originx, y, *shapes.at(i)))
-					{
-						return true;
-					}
-				}
-			}
-		}
+		horizontalFails = hasHorizontalLine(candX, originy, originx, shapes, src, dest);
+		//					lowx	y		highx
+		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
+		//					lowy	x		highy
 	}
 
-	return false;
+	return (verticalFails || horizontalFails);
 }
 // an unobstructed upper-right-angle-path between two points exists
 
@@ -309,6 +254,8 @@ void TKSCENE::RefreshPaths()
 	}
 }
 
+
+
 int TKSCENE::PathFindHypotenuse(path* pa)
 {
 	// should not be called while dragging a shape.
@@ -346,16 +293,31 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	int zeroy = pa->nodes.at(0)->posy; // the starting y point of the path
 	bool upperFails = false;
 	bool lowerFails = false;
+
+	// special paths, horizontal / vertical
+	if (zerox == destinationx)
+	{
+
+	}
+
+	if (zeroy == destinationy)
+	{
+
+	}
+
+
 	int hyp_offsetx = 0;
 	int hyp_offsety = 0;
-	int hypx_scale = 10;
+
+	int hypx_scale = 10; // just a standard pick
 	if (destinationx < zerox)
 	{
-		hypx_scale = -hypx_scale;
+		hypx_scale = -hypx_scale; // make negative if need be
 	}
-	float dx = (float)destinationx - (float)zerox;
-	float dy = (float)destinationy - (float)zeroy;
-	int hypy_scale = (int)((dy / dx)*hypx_scale);
+	float dx = (float)destinationx - (float)zerox; // total delta x
+	float dy = (float)destinationy - (float)zeroy; // total delta y
+
+	int hypy_scale = (int)((dy / dx)*hypx_scale); // slope  = dy/dx
 	int count = 1;
 
 	while (hyp_offsetx <= abs(destinationx - zerox) && hyp_offsety <= abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
@@ -367,7 +329,11 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 			if (lowerFails)
 			{
 				hyp_offsetx += hypx_scale;
-				hyp_offsety += hypy_scale;
+				hyp_offsety += ((dy / dx)*hyp_offsetx);
+				if (hyp_offsety = 0)
+				{
+					printf("");
+				}
 				exitCode = TK_CODE_BAD_PATH;
 			}
 			else
@@ -436,7 +402,7 @@ int TKSCENE::GetAllEvents()
 	{
 		int mousex = ee->motion.x;
 		int mousey = ee->motion.y;
-#ifdef _DEBUG2
+#ifdef _DEBUG
 		int keystate = ee->key.state;
 		int keycode = ee->key.keysym.scancode;
 		int buttonstate = ee->button.state;
@@ -695,6 +661,7 @@ int TKSCENE::GetAllEvents()
 
 
 					paths.push_back(new path(shapes.at(shapes.size() - 1)->id, shapes.at(shapes.size() - 2)->id, 3));
+					
 					PathFindHypotenuse(paths.back());
 					if (!paths.back()->validPath)
 					{
