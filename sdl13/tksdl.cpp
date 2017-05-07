@@ -155,6 +155,23 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 }
 // an unobstructed lower-right-angle-path between two points exists
 
+bool isObstructed(unsigned int sh, std::vector<shape*> shapes)
+{
+	for (unsigned int i = 0; i < shapes.size(); ++i)
+	{
+		if (i != sh)
+		{
+			if (isInsideBox(shapes.at(sh)->nodex[shape::TOP], shapes.at(sh)->nodey[shape::TOP], *shapes.at(i)))
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+
+}
+
+
 void TKSCENE::RefreshPaths()
 {
 	for (unsigned int i = 0; i < paths.size(); ++i)
@@ -190,8 +207,20 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	}
 
 
+
+
 	shapes.at(source)->UpdateNodes();
 	shapes.at(destination)->UpdateNodes();
+
+	if (isObstructed(source, shapes))
+	{
+		return TK_CODE_SOURCE_OBSTRUCTED;
+	}
+
+	if (isObstructed(destination, shapes))
+	{
+		return TK_CODE_DESTINATION_OBSTRUCTED;
+	}
 
 	pa->nodes.clear();
 
