@@ -1,12 +1,13 @@
 // sdl13.cpp : Defines the entry point for the console application.
 // 
 
-// TODO: Vertical paths are not valid. why?
-// search for non-hypotenuse paths
-// paths should follow shapes that are moved
+// TODO: search for non-hypotenuse paths
 // source and destination nodes should not be stuck on the top of the shape
 // manually movable paths? by selecting intermediate nodes
 // nodes should be more visisble?
+// can you move pathfinding into a new thread?
+// we might still be able to make a context menu
+// add text processing
 
 
 #include <vector>
@@ -71,9 +72,26 @@ void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<pat
 		for (unsigned int i = 0; i < paths.size(); ++i) 
 		{
 			paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
+#ifdef _DEBUG2
+			for (unsigned int j = 0; j < paths.at(i)->nodes.size(); j++)
+			{
+				paths.at(i)->nodes.at(j)->drawNodes(re, ac, paths.at(i)->nodes.at(j));
+			}
+#endif
 		}
 	}
+}
 
+void SetNodes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<node*> nodes)
+{
+	if (!(nodes.empty()))
+	{
+		//
+		for (unsigned int i = 0; i < nodes.size(); ++i)
+		{
+			nodes.front()->node::drawNodes(re, ac, nodes.at(i)); // draw current path into renderer
+		}
+	}
 }
 
 void ClearAll(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes)
@@ -115,6 +133,10 @@ int main()
 		if (response % 2 == 1)
 		{
 			ClearAll(scene->rr, pc, sc, ac, scene->shapes);
+			if (response == TK_CODE_DRAG || response == TK_CODE_RESIZE)
+			{
+				scene->RefreshPaths();
+			}
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
 			scene->UpdateScreen();

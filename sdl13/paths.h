@@ -21,6 +21,7 @@ public:
 
 	branchType branch;
 
+	void drawNodes(SDL_Renderer *r, color* c, node *n);
 
 };
 

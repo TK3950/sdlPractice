@@ -28,6 +28,8 @@ public:
 	void UpdateScreen();
 	int GetAllEvents();
 	int PathFindHypotenuse(path* pa);
+	
+	void RefreshPaths();
 
 
 	unsigned int shapeIterator;
