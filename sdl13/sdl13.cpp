@@ -5,6 +5,9 @@
 // source and destination nodes should not be stuck on the top of the shape
 // manually movable paths? by selecting intermediate nodes
 // nodes should be more visisble?
+// can you move pathfinding into a new thread?
+// we might still be able to make a context menu
+// add text processing
 
 
 #include <vector>

@@ -399,6 +399,12 @@ int TKSCENE::GetAllEvents()
 			return TK_CODE_REFRESH_PATHS;
 		}
 		// KEYPRESS: F5
+		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
+		{
+			return TK_CODE_MISC;
+		}
+		// KEYPRESS: F5
+
 
 		if (ee->button.button == SDL_BUTTON_LEFT)
 		{
