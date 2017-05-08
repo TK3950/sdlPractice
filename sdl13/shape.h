@@ -5,8 +5,8 @@
 
 #pragma once
 
-#ifndef _STDAFX_H
-#define _STDAFX_H
+#ifndef _SHAPE_H
+#define _SHAPE_H
 #include "targetver.h"
 #include <math.h>
 #include <SDL/SDL.h>
