@@ -92,7 +92,7 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 
 	else if (originx < candX && originy > candY)
-	{ // source is below or = and left
+	{ // source is below and left
 		horizontalFails = hasHorizontalLine(originx, originy, candX, shapes, src, dest);
 		//					lowx	y		highx
 		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
@@ -100,17 +100,17 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 	}
 
 	else if (originx > candX && originy < candY)
-	{ // source right or = and above
+	{ // source right and above
 		horizontalFails = hasHorizontalLine(candX, originy, originx, shapes, src, dest);
 		//					lowx	y		highx
 		verticalFails = hasVerticalLine(originy, candX, candY, shapes, src, dest);
 		//					lowy	x		highy
 	}
 	else if (originx >  candX && originy > candY)
-	{ // source is right or = and below or =
-		horizontalFails = hasHorizontalLine(candX, originy, originx, shapes, src, dest);
+	{ // source is right and below
+		horizontalFails = hasHorizontalLine(candX, candY, originx, shapes, src, dest);
 		//					lowx	y		highx
-		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
+		verticalFails = hasVerticalLine(candY, originx, originy, shapes, src, dest);
 		//					lowy	x		highy
 	}
 
@@ -131,21 +131,21 @@ bool hasLowerPath(int originx, int originy, int candX, int candY, std::vector<sh
 		//									lowy	x		highy
 	}
 	else if (originx < candX && originy > candY)
-	{ // source is above and left
+	{ // source is below and left
 		horizontalFails = hasHorizontalLine(originx, originy, candX, shapes, src, dest);
 		//									lowx	y		highx
 		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
 		//									lowy	x		highy
 	}
 	else if (originx > candX && originy < candY)
-	{ // source is above and left
+	{ // source is above and right
 		horizontalFails = hasHorizontalLine(candX, candY, originx, shapes, src, dest);
 		//									lowx	y		highx
 		verticalFails = hasVerticalLine(originy, originx, candY, shapes, src, dest);
 		//									lowy	x		highy
 	}
 	else if (originx > candX && originy > candY)
-	{ // source is above and left
+	{ // source is below and right
 		horizontalFails = hasHorizontalLine(candX, originy, originx, shapes, src, dest);
 		//									lowx	y		highx
 		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
@@ -258,7 +258,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	int hypy_scale = (int)((dy / dx)*hypx_scale); // slope  = dy/dx
 	int count = 1;
 
-	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
+	while (hyp_offsetx <= abs(destinationx - zerox) && hyp_offsety <= abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
 	{
 		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
 		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
@@ -267,11 +267,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 			if (lowerFails)
 			{
 				hyp_offsetx += hypx_scale;
-				hyp_offsety += (int)round(((dy / dx)*hyp_offsetx));
-				if (hyp_offsety = 0)
-				{
-					printf("");
-				}
+				hyp_offsety += (((dy / dx)*hypx_scale));
 				exitCode = TK_CODE_BAD_PATH;
 			}
 			else

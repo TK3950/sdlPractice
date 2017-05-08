@@ -45,3 +45,12 @@ void path::drawPath(SDL_Renderer *r, color* c, path *p)
 	}
 
 }
+
+
+
+void node::drawNodes(SDL_Renderer *r, color* c, node* n)
+{
+
+	SDL_RenderDrawLine(r, n->posx, n->posy, n->posx + 10, n->posy + 10);
+
+}

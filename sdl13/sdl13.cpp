@@ -69,9 +69,25 @@ void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<pat
 		for (unsigned int i = 0; i < paths.size(); ++i) 
 		{
 			paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
+			
+			for (unsigned int j = 0; j < paths.at(i)->nodes.size(); j++)
+			{
+				paths.at(i)->nodes.at(j)->drawNodes(re, ac, paths.at(i)->nodes.at(j));
+			}
 		}
 	}
+}
 
+void SetNodes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<node*> nodes)
+{
+	if (!(nodes.empty()))
+	{
+		//
+		for (unsigned int i = 0; i < nodes.size(); ++i)
+		{
+			nodes.front()->node::drawNodes(re, ac, nodes.at(i)); // draw current path into renderer
+		}
+	}
 }
 
 void ClearAll(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<shape*> shapes)
