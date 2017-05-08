@@ -214,12 +214,12 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 
 	if (isObstructed(source, shapes))
 	{
-		return TK_CODE_SOURCE_OBSTRUCTED;
+		return TK_CODE_PATH_NOT_FOUND;
 	}
 
 	if (isObstructed(destination, shapes))
 	{
-		return TK_CODE_DESTINATION_OBSTRUCTED;
+		return TK_CODE_PATH_NOT_FOUND;
 	}
 
 	pa->nodes.clear();
@@ -235,7 +235,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	// special paths, horizontal / vertical
 	if (zerox == destinationx)
 	{
-
+		// BOOKMARK: Handle these special paths at another time.
 	}
 
 	if (zeroy == destinationy)
