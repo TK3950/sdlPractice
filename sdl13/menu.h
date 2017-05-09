@@ -30,16 +30,11 @@ class menu
 	int posy;
 	int width;
 	int height;
+
+	bool active;
 };
 
 
-menu::~menu()
-{
-	delete &posx;
-	delete &posy;
-	delete &width;
-	delete &height;
-}
 
 
 

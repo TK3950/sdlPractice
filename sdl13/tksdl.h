@@ -5,6 +5,7 @@
 #include "paths.h"
 #include "shape.h"
 #include "tkcodes.h"
+#include "menu.h"
 #include <SDL/SDL.h>
 
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "tksdl.h"
 
-// TODO: Rewrite hasLowerPath() to mirror the style of the new hasUpperPath()
+// TODO:
 
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
@@ -407,6 +407,14 @@ int TKSCENE::GetAllEvents()
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
 		{
 			menu* context = new menu(ee->motion.x, ee->motion.y, 100, 50);
+			if (context->active)
+			{
+				context->active = false;
+			}
+			else 
+			{
+				context->active = true;
+			}
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F1
@@ -499,7 +507,6 @@ int TKSCENE::GetAllEvents()
 			return TK_CODE_RESIZE;
 		}
 		// CLICKED: RIGHT
-
 																				// consider #define'ing
 		if (ee->button.button == 4 && editMode && !shapes.empty()) // right click held + drag is 4 instead of 3
 		{

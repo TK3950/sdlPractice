@@ -10,4 +10,16 @@ void menu::drawDropDown(SDL_Renderer *r)
 	myMenu->h = height;
 	myMenu->w = width;
 
+	if (active)
+	{
+		SDL_RenderDrawRect(r, myMenu);
+	}
+}
+
+menu::~menu()
+{
+	delete &posx;
+	delete &posy;
+	delete &width;
+	delete &height;
 }
