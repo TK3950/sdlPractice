@@ -25,6 +25,7 @@ public:
 	std::vector<path*>		paths;
 	color*					PrimaryColor;
 	color*					SecondaryColor;
+	menu*					context;
 
 	void UpdateScreen();
 	int GetAllEvents();

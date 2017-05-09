@@ -3,17 +3,12 @@
 void menu::drawDropDown(SDL_Renderer *r)
 {
 
-	SDL_Rect *myMenu;
-	myMenu = new SDL_Rect();
-	myMenu->x = posx;
-	myMenu->y = posy;
-	myMenu->h = height;
-	myMenu->w = width;
+	box.x = posx;
+	box.y = posy;
+	box.w = width;
+	box.h = height;
 
-	if (active)
-	{
-		SDL_RenderDrawRect(r, myMenu);
-	}
+	SDL_RenderDrawRect(r, &box);
 }
 
 menu::~menu()

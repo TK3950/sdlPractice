@@ -139,6 +139,10 @@ int main()
 			}
 			SetShapes(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->shapes);
 			SetPaths(scene->rr, scene->PrimaryColor, scene->SecondaryColor, ac, scene->paths);
+			if (scene->context->active)
+			{
+				scene->context->drawDropDown(scene->rr);
+			}
 			scene->UpdateScreen();
 		}
 

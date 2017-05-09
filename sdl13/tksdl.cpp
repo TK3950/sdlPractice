@@ -23,6 +23,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	SecondaryColor = sc;
 	SDL_BlitSurface(ss, NULL, ss, NULL);
 	tt = SDL_CreateTextureFromSurface(rr, ss);
+	context = new menu(0, 0, 100, 100);
 
 }
 
@@ -258,7 +259,8 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	int hypy_scale = (int)((dy / dx)*hypx_scale); // slope  = dy/dx
 	int count = 1;
 
-	while (hyp_offsetx <= abs(destinationx - zerox) && hyp_offsety <= abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
+	//	using <= in the below condition is what causes our loop crashing. DO NOT USE <=
+	while (hyp_offsetx < abs(destinationx - zerox) && hyp_offsety < abs(destinationy - zeroy) && exitCode != TK_CODE_GOOD_PATH) // this check must be revised.
 	{
 		upperFails = hasUpperPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
 		lowerFails = hasLowerPath(zerox, zeroy, destinationx - hyp_offsetx, destinationy - hyp_offsety, shapes, source, destination);
@@ -406,7 +408,6 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: F2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
 		{
-			menu* context = new menu(ee->motion.x, ee->motion.y, 100, 50);
 			if (context->active)
 			{
 				context->active = false;

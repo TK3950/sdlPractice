@@ -22,10 +22,11 @@
 class menu
 {
 	public:
-		menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h) {}
+		menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h), active(false) {}
 		~menu();
 		void drawDropDown(SDL_Renderer *r);
 
+		SDL_Rect box;
 	int posx;
 	int posy;
 	int width;
