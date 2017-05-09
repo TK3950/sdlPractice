@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _MENU_H
 #define _MENU_H true
+#include <SDL\SDL.h>
 
 /* We may want to re-examine our blitting process in tksdl.cpp
  * We're going to see about using a .bmp resource file and some text
@@ -18,6 +19,27 @@
  */
 
 
+class menu
+{
+	public:
+		menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h) {}
+		~menu();
+		void drawDropDown(SDL_Renderer *r);
+
+	int posx;
+	int posy;
+	int width;
+	int height;
+};
+
+
+menu::~menu()
+{
+	delete &posx;
+	delete &posy;
+	delete &width;
+	delete &height;
+}
 
 
 

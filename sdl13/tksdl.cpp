@@ -399,11 +399,17 @@ int TKSCENE::GetAllEvents()
 			return TK_CODE_REFRESH_PATHS;
 		}
 		// KEYPRESS: F5
-		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
+		if (ee->key.keysym.scancode == SDL_SCANCODE_F2 && ee->key.state == SDL_PRESSED)
 		{
 			return TK_CODE_MISC;
 		}
-		// KEYPRESS: F5
+		// KEYPRESS: F2
+		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
+		{
+			menu* context = new menu(ee->motion.x, ee->motion.y, 100, 50);
+			return TK_CODE_MISC;
+		}
+		// KEYPRESS: F1
 
 
 		if (ee->button.button == SDL_BUTTON_LEFT)

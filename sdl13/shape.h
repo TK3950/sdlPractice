@@ -16,17 +16,6 @@
 #define TK_WINDOW_WIDTH 1000
 #define TK_WINDOW_HEIGHT 680
 
-class menu {
-public:
-	menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h) {}
-	void drawDropDown(SDL_Renderer *r, int x, int y, int w, int h);
-
-	int posx;
-	int posy;
-	int width;
-	int height;
-};
-
 class shape {
 public:
 	enum form {
