@@ -109,6 +109,7 @@ int main()
 #pragma region SDL Setup
 	SDL_Renderer* r = NULL;
 	SDL_Surface* s = NULL;
+	s = SDL_CreateRGBSurface(0, TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, 32, 255, 255, 255, 0);
 	SDL_Window* w = NULL;
 	SDL_Event e;
 	std::vector<shape*> sh;

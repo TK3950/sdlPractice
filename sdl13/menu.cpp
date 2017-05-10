@@ -7,7 +7,7 @@ void menu::drawDropDown(SDL_Renderer *r)
 	box.y = posy;
 	box.w = width;
 	box.h = height;
-
+	
 	SDL_RenderDrawRect(r, &box);
 }
 

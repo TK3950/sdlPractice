@@ -408,6 +408,10 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: F2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
 		{
+			// find out fill for rect
+			ss = SDL_CreateRGBSurface(0, TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, 32, 255, 255, 255, 0);
+			SDL_FillRect(ss, &context->box, SDL_MapRGB(ss->format, 255, 0, 0));
+			//SDL_FillRect(ss, &context->box, 1000);
 			if (context->active)
 			{
 				context->active = false;
@@ -508,8 +512,8 @@ int TKSCENE::GetAllEvents()
 			return TK_CODE_RESIZE;
 		}
 		// CLICKED: RIGHT
-																				// consider #define'ing
-		if (ee->button.button == 4 && editMode && !shapes.empty()) // right click held + drag is 4 instead of 3
+																				
+		if (ee->button.button == 4 && editMode && !shapes.empty()) // right click held + drag is 4 instead of 3, consider #define'ing
 		{
 
 			if (abs(ee->motion.xrel) < 1000)
