@@ -6,7 +6,7 @@
 TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, std::vector<shape*> sh, std::vector<path*> pa, color* pc, color* sc)
 {
 	SDL_Init(SDL_INIT_EVERYTHING); // initialize all SDL layers
-	w = SDL_CreateWindow("SDL Demo", // create our window objecdt reference by pointer, with Title
+	w = SDL_CreateWindow("SDL Demo", // create our window object reference by pointer, with Title
 		SDL_WINDOWPOS_UNDEFINED, // x position
 		SDL_WINDOWPOS_UNDEFINED, // y position
 		TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, // width, height
@@ -21,7 +21,6 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	paths = pa;
 	PrimaryColor = pc;
 	SecondaryColor = sc;
-	SDL_BlitSurface(ss, NULL, ss, NULL);
 	tt = SDL_CreateTextureFromSurface(rr, ss);
 	context = new menu(0, 0, 100, 100);
 
@@ -363,6 +362,8 @@ int TKSCENE::GetAllEvents()
 		}
 #endif
 
+#pragma region Key Presses
+
 		if (ee->key.keysym.scancode == SDL_SCANCODE_1 && ee->key.state == SDL_PRESSED)
 		{
 			shapes.push_back(new shape(shape::TK_RHOMBUS, PrimaryColor, 0, 0, 100, 50, shapeIterator));
@@ -410,7 +411,7 @@ int TKSCENE::GetAllEvents()
 		{
 			// find out fill for rect
 			ss = SDL_CreateRGBSurface(0, TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, 32, 255, 255, 255, 0);
-			SDL_FillRect(ss, &context->box, SDL_MapRGB(ss->format, 255, 0, 0));
+			SDL_FillRect(ss, context->box, SDL_MapRGB(ss->format, 255, 0, 0));
 			//SDL_FillRect(ss, &context->box, 1000);
 			if (context->active)
 			{
@@ -424,7 +425,9 @@ int TKSCENE::GetAllEvents()
 		}
 		// KEYPRESS: F1
 
+#pragma endregion
 
+#pragma region Mouse Events
 		if (ee->button.button == SDL_BUTTON_LEFT)
 		{
 			if (ee->button.state == SDL_PRESSED)
@@ -478,6 +481,7 @@ int TKSCENE::GetAllEvents()
 		}
 		// NOT-CLICKED && NOT-HELD: LEFT
 
+#ifdef RESIZE
 		if (ee->button.button == SDL_BUTTON_RIGHT)
 		{
 			if (ee->button.state == SDL_PRESSED)
@@ -545,6 +549,26 @@ int TKSCENE::GetAllEvents()
 			editMode = false;
 		}
 		// NOT-CLICKED && NOT-HELD: RIGHT
+#endif
+
+#ifndef RESIZE
+		if (ee->button.button == SDL_BUTTON_RIGHT && ee->button.state == SDL_PRESSED)
+		{
+			context->box->x = ee->motion.x;
+			context->box->y = ee->motion.y;
+			
+			if (context->active)
+			{
+				context->active = false;
+			}
+			else
+			{
+				context->active = true;
+			}
+			return TK_CODE_MISC;
+		}
+
+#endif
 
 		if (ee->button.button == SDL_BUTTON_MIDDLE)
 		{
@@ -643,6 +667,8 @@ int TKSCENE::GetAllEvents()
 			lineMode = false;
 		}
 		// NOT-CLICKED && NOT-HELD: MIDDLE
+
+#pragma endregion
 	}
 	return 0; 
 }

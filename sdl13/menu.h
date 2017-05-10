@@ -2,6 +2,7 @@
 #ifndef _MENU_H
 #define _MENU_H true
 #include <SDL\SDL.h>
+#include <SDL_ttf.h>
 
 /* We may want to re-examine our blitting process in tksdl.cpp
  * We're going to see about using a .bmp resource file and some text
@@ -22,11 +23,11 @@
 class menu
 {
 	public:
-		menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h), active(false) {}
+		menu(int x, int y, int w, int h);
 		~menu();
 		void drawDropDown(SDL_Renderer *r);
 
-		SDL_Rect box;
+		SDL_Rect* box;
 	int posx;
 	int posy;
 	int width;
