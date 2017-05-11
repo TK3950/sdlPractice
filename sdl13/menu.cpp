@@ -3,7 +3,8 @@
 
 menu::menu(int x, int y, int w, int h) : posx(x), posy(y), width(w), height(h), active(false)
 {
-	box = new SDL_Rect{ posx, posy, width, height };
+	boxes[0] = new SDL_Rect{ posx, posy, width, height };
+	box = boxes[0];
 }
 void menu::drawDropDown(SDL_Renderer *r)
 {

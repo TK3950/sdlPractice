@@ -404,15 +404,16 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: F5
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F2 && ee->key.state == SDL_PRESSED)
 		{
+			color* col = new color(0, 0, 0, 0);
+			shape* one = new shape(shape::TK_TEXT, col, 0, 0, 100, 100, 49);
+			one->drawText(rr, *one);
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
 		{
-			// find out fill for rect
 			ss = SDL_CreateRGBSurface(0, TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, 32, 255, 255, 255, 0);
 			SDL_FillRect(ss, context->box, SDL_MapRGB(ss->format, 255, 0, 0));
-			//SDL_FillRect(ss, &context->box, 1000);
 			if (context->active)
 			{
 				context->active = false;

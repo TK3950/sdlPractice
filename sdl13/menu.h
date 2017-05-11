@@ -26,6 +26,8 @@ class menu
 		~menu();
 		void drawDropDown(SDL_Renderer *r);
 
+		SDL_Rect* boxes[10];
+
 		SDL_Rect* box;
 	int posx;
 	int posy;
