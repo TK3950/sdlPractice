@@ -1,9 +1,11 @@
 // shape.cpp : source file that includes just the standard includes
 // sdl13.pch will be the pre-compiled header
 // shape.obj will contain the pre-compiled type information
-#pragma once
+
+
 #include "shape.h"
 #include <SDL\SDL.h>
+
 #define BRESENHAM 1
 
 // TODO: reference any additional headers you need in STDAFX.H
@@ -138,8 +140,8 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 #ifdef BRESENHAM
 	int width = t.width/2;
 	int height = t.height/2;
-	int xc = t.GetPosX()+a;
-	int yc = t.GetPosY()+b;
+	int xc = t.GetPosX()+(int)a;
+	int yc = t.GetPosY()+(int)b;
 	{
 		int a2 = width * width;
 		int b2 = height * height;
@@ -178,5 +180,20 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 	}
 #endif
 
+
+
+
 }
 
+void shape::drawText(SDL_Renderer *r, shape t)
+{
+	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
+	SDL_Color black = { 0,0,0 };
+
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", black); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(r, surfaceMessage); //now you can convert it into a texture
+
+	SDL_RenderCopy(r, Message, NULL, NULL);
+
+}

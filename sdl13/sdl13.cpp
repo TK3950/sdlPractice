@@ -17,7 +17,8 @@ Create multiple rects to serve as menu lines and build your context menu from th
 #include <vector>
 #include <SDL/SDL.h>
 #include "tksdl.h"
-#include "paths.h"
+//#include "paths.h"
+#include <sdlttf/SDL_ttf.h>
 #include <windows.h>
 #undef main
 

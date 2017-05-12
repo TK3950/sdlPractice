@@ -72,13 +72,13 @@
     <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2.dll">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.dll">
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.dll">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.dll">
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.dll">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\zlib1.dll">
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\zlib1.dll">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
@@ -92,10 +92,10 @@
     <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2test.lib">
       <Filter>Resource Files</Filter>
     </Library>
-    <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.lib">
+    <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.lib">
       <Filter>Resource Files</Filter>
     </Library>
-    <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\libfreetype-6.lib">
+    <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.lib">
       <Filter>Resource Files</Filter>
     </Library>
   </ItemGroup>

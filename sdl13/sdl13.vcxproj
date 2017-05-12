@@ -167,17 +167,17 @@
     <ClCompile Include="tksdl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.dll" />
     <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2.dll" />
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.dll" />
-    <None Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\zlib1.dll" />
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.dll" />
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.dll" />
+    <None Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\libfreetype-6.lib" />
     <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2.lib" />
     <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2main.lib" />
     <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2test.lib" />
-    <Library Include="..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.lib" />
+    <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\libfreetype-6.lib" />
+    <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib\x86\SDL2_ttf.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

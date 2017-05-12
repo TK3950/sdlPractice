@@ -10,6 +10,7 @@
 #include "targetver.h"
 #include <math.h>
 #include <SDL/SDL.h>
+#include <SDL_ttf.h>
 #include "color.h"
 #include <stdio.h>
 #include <tchar.h>
@@ -22,6 +23,7 @@ public:
 		TK_RECTANGLE = 0,
 		TK_RHOMBUS,
 		TK_ELLIPSE,
+		TK_TEXT,
 	};
 
 	enum node {
@@ -42,6 +44,7 @@ public:
 	void drawRhombus(SDL_Renderer *r, shape s);
 	void drawRectangle(SDL_Renderer *r, shape s);
 	void drawEllipse(SDL_Renderer *r, shape s);
+	void drawText(SDL_Renderer *r, shape s);
 	void drawLine(SDL_Renderer *r, shape s);
 	void drawArrow(SDL_Renderer *r, shape s);
 	
