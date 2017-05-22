@@ -93,9 +93,9 @@ bool hasUpperPath(int originx, int originy, int candX, int candY, std::vector<sh
 
 	else if (originx < candX && originy > candY)
 	{ // source is below and left
-		horizontalFails = hasHorizontalLine(originx, originy, candX, shapes, src, dest);
+		horizontalFails = hasHorizontalLine(originx, candY, candX, shapes, src, dest);
 		//					lowx	y		highx
-		verticalFails = hasVerticalLine(candY, candX, originy, shapes, src, dest);
+		verticalFails = hasVerticalLine(candY, originx, originy, shapes, src, dest);
 		//					lowy	x		highy
 	}
 
@@ -176,7 +176,10 @@ void TKSCENE::RefreshPaths()
 {
 	for (unsigned int i = 0; i < paths.size(); ++i)
 	{
-		PathFindHypotenuse(paths.at(i));
+		if (PathFindHypotenuse(paths.at(i)) != TK_CODE_PATH_FOUND)
+		{
+			paths.erase(paths.begin() + i);
+		}
 	}
 }
 
@@ -184,31 +187,15 @@ void TKSCENE::RefreshPaths()
 
 int TKSCENE::PathFindHypotenuse(path* pa)
 {
+
+	// TODO: rework this function to improve speed, or do no call when dragging
 	// should not be called while dragging a shape.
 	pa->validPath = false;
 	int exitCode = 0;
 
 	unsigned int source, destination;
-
-	for (unsigned int i = 0; i < shapes.size(); ++i)
-	{
-		if (shapes.at(i)->id == pa->sourceId)
-		{
-			source = i;
-		}
-	}
-
-	for (unsigned int i = 0; i < shapes.size(); ++i)
-	{
-		if (shapes.at(i)->id == pa->destinationId)
-		{
-			destination = i;
-		}
-	}
-
-
-
-
+	source = pa->source;
+	destination = pa->destination;
 	shapes.at(source)->UpdateNodes();
 	shapes.at(destination)->UpdateNodes();
 
@@ -216,13 +203,16 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	{
 		return TK_CODE_PATH_NOT_FOUND;
 	}
+	// source has another shape on top of it
 
 	if (isObstructed(destination, shapes))
 	{
 		return TK_CODE_PATH_NOT_FOUND;
 	}
+	// destination has another shape on top of it
 
-	pa->nodes.clear();
+	pa->nodes.clear(); // start with a clean slate
+	// this may want to be modified some other time.
 
 	pa->nodes.push_back(new node(shapes.at(source)->nodex[shape::TOP], shapes.at(source)->nodey[shape::TOP], node::NONE));
 	int destinationx = shapes.at(destination)->nodex[shape::TOP]; // the final x destination of the path
@@ -232,16 +222,47 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	bool upperFails = false;
 	bool lowerFails = false;
 
-	// special paths, horizontal / vertical
-	if (zerox == destinationx)
+	if (zerox == destinationx && zeroy != destinationy)
 	{
-		// BOOKMARK: Handle these special paths at another time.
+		if (zeroy > destinationy)
+		{
+			if (!hasVerticalLine(destinationy, zerox, zeroy, shapes, source, destination))
+			{
+				pa->nodes.push_back(new node(destinationx,destinationy,node::VERTICAL));
+				exitCode = TK_CODE_GOOD_PATH;
+			}
+		}
+		else
+		{
+			if (!hasVerticalLine(zeroy, zerox, destinationy, shapes, source, destination))
+			{
+				pa->nodes.push_back(new node(destinationx, destinationy, node::VERTICAL));
+				exitCode = TK_CODE_GOOD_PATH;
+			}
+		}
 	}
+	// special vertical path
 
-	if (zeroy == destinationy)
+	else if (zeroy == destinationy && zerox != destinationx)
 	{
-
+		if (zerox > destinationx)
+		{
+			if (!hasHorizontalLine(destinationx, zeroy, zerox, shapes, source, destination))
+			{
+				pa->nodes.push_back(new node(destinationx, destinationy, node::HORIZONTAL));
+				exitCode = TK_CODE_GOOD_PATH;
+			}
+		}
+		else
+		{
+			if (!hasHorizontalLine(zerox, zeroy, destinationx, shapes, source, destination))
+			{
+				pa->nodes.push_back(new node(destinationx, destinationy, node::HORIZONTAL));
+				exitCode = TK_CODE_GOOD_PATH;
+			}
+		}
 	}
+	// special horizontal path.
 
 
 	int hyp_offsetx = 0;
@@ -254,6 +275,11 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 	}
 	float dx = (float)destinationx - (float)zerox; // total delta x
 	float dy = (float)destinationy - (float)zeroy; // total delta y
+
+	if ((int)dx % hypx_scale == 0)
+	{
+		hypx_scale++;
+	}
 
 	int hypy_scale = (int)((dy / dx)*hypx_scale); // slope  = dy/dx
 	int count = 1;
@@ -268,7 +294,7 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 			if (lowerFails)
 			{
 				hyp_offsetx += hypx_scale;
-				hyp_offsety += (((dy / dx)*hypx_scale));
+				hyp_offsety += hypy_scale;
 				exitCode = TK_CODE_BAD_PATH;
 			}
 			else
@@ -280,6 +306,11 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 				hyp_offsetx = 0;
 				hyp_offsety = 0;
 			}
+		}
+		else if (zerox == destinationx - hyp_offsetx && zeroy == destinationy - hyp_offsety) // special case to break loops, only valid path is onto itself
+		{
+			exitCode = TK_CODE_BAD_PATH;
+			zerox++;
 		}
 		else
 		{
@@ -330,6 +361,7 @@ int TKSCENE::GetAllEvents()
 	static bool lineMode;
 	static bool sourceIsNotDestination;
 	static int selectedShape;
+	static int pathSource, pathDest;
 
 
 	sourceIsNotDestination = false;
@@ -337,6 +369,7 @@ int TKSCENE::GetAllEvents()
 	{
 		int mousex = ee->motion.x;
 		int mousey = ee->motion.y;
+		
 #ifdef _DEBUG
 		int keystate = ee->key.state;
 		int keycode = ee->key.keysym.scancode;
@@ -412,16 +445,6 @@ int TKSCENE::GetAllEvents()
 		// KEYPRESS: F2
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F1 && ee->key.state == SDL_PRESSED)
 		{
-			ss = SDL_CreateRGBSurface(0, TK_WINDOW_WIDTH, TK_WINDOW_HEIGHT, 32, 255, 255, 255, 0);
-			SDL_FillRect(ss, context->box, SDL_MapRGB(ss->format, 255, 0, 0));
-			if (context->active)
-			{
-				context->active = false;
-			}
-			else 
-			{
-				context->active = true;
-			}
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F1
@@ -435,43 +458,20 @@ int TKSCENE::GetAllEvents()
 			{
 				for (unsigned int i = 0; i < shapes.size(); ++i)
 				{
-					if (!shapes.empty())
-					{
-						if (ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth())
+						if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
 						{
-							if (ee->motion.x > shapes.at(i)->GetPosX())
-							{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight())
+								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
 								{
-									if (ee->motion.y > shapes.at(i)->GetPosY())
-									{
 										dragMode = true;	// the cursor clicked inside the bounds of the shape
 										selectedShape = i;	// last shape within bounds
-										if (selectedShape != shapes.size() - 1) // if our shape is not at the back of our vector
-										{
-											shapes.push_back(shapes.at(selectedShape));
-											shapes.erase(shapes.begin() + selectedShape);
-										}
-									}
 								}
-							}
 						}
-					}
 				}
 			}
-			if (dragMode && !shapes.empty())
+			if (dragMode && !shapes.empty() && abs(ee->motion.xrel) < TK_WINDOW_WIDTH && abs(ee->motion.yrel) < TK_WINDOW_WIDTH)
 			{
-				if (selectedShape != shapes.size() - 1)
-				{
-					shapes.push_back(shapes.at(selectedShape));
-					shapes.erase(shapes.begin() + selectedShape);
-				}
-
-				if (abs(ee->motion.xrel) < TK_WINDOW_WIDTH && abs(ee->motion.yrel) < TK_WINDOW_WIDTH)
-				{
 					// DRAGGING!
-					shapes.back()->SetPos(shapes.back()->GetPosX() + ee->motion.xrel, shapes.back()->GetPosY() + ee->motion.yrel);
-				}
+					shapes.at(selectedShape)->SetPos(shapes.at(selectedShape)->GetPosX() + ee->motion.xrel, shapes.at(selectedShape)->GetPosY() + ee->motion.yrel);
 			}
 			return TK_CODE_DRAG;
 		}
@@ -573,66 +573,49 @@ int TKSCENE::GetAllEvents()
 
 		if (ee->button.button == SDL_BUTTON_MIDDLE)
 		{
+			
 			if (ee->button.state == SDL_PRESSED)
 			{
+				pathSource = 0;
 				for (unsigned int i = 0; i < shapes.size(); ++i)
 				{
-					if (!shapes.empty())
-					{
-						if (ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth())
+						if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
 						{
-							if (ee->motion.x > shapes.at(i)->GetPosX())
-							{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight())
+								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
 								{
-									if (ee->motion.y > shapes.at(i)->GetPosY())
-									{
 										lineMode = true;	// the cursor clicked inside the bounds of the shape
 										selectedShape = i;	// last shape within bounds
-										if (selectedShape != shapes.size() - 1) // if our shape is not at the back of our vector
-										{
-											shapes.push_back(shapes.at(selectedShape));
-											shapes.erase(shapes.begin() + selectedShape);
-										}
-									}
+										pathSource = i;
 								}
-							}
 						}
-					}
 				}
 			}
 
 			else if (ee->motion.type == 1024 && ee->button.state != SDL_PRESSED)
 			{
 				// middle and drag
-
 			}
 
 			else if (ee->motion.type == 1026 && ee->button.state != SDL_PRESSED)
 			{
 				// middle and released
+				pathDest = 0;
 				for (unsigned int i = 0; i < shapes.size(); ++i)
 				{
 					if (!shapes.empty())
 					{
-						if (ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth())
+						if (ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
 						{
-							if (ee->motion.x > shapes.at(i)->GetPosX())
-							{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight())
+								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
 								{
-									if (ee->motion.y > shapes.at(i)->GetPosY())
-									{
 										selectedShape = i;	// last shape within bounds
-										if (selectedShape != shapes.size() - 1) // if our shape is not at the back of our vector
+										pathDest = i;
+										if (pathSource != pathDest) // if our shapes are not the same
 										{
-											shapes.push_back(shapes.at(selectedShape));
-											shapes.erase(shapes.begin() + selectedShape);
 											sourceIsNotDestination = true; // source shape is not destination shape
 										}
-									}
+									
 								}
-							}
 						}
 					}
 				}
@@ -642,13 +625,13 @@ int TKSCENE::GetAllEvents()
 				{
 					// draw with shapes at last and second to last position
 
-
-					paths.push_back(new path(shapes.at(shapes.size() - 1)->id, shapes.at(shapes.size() - 2)->id, 3));
 					
-					PathFindHypotenuse(paths.back());
-					if (!paths.back()->validPath)
+					paths.push_back(new path(pathSource, pathDest)); // send a new path to the back of our vector
+					
+					
+					if (PathFindHypotenuse(paths.back()) != TK_CODE_PATH_FOUND) // if we don't have a hypot. path
 					{
-						paths.pop_back();
+						paths.pop_back(); // delete it
 						printf("\n====Path not valid====\n");
 					}
 					else
@@ -670,6 +653,7 @@ int TKSCENE::GetAllEvents()
 		// NOT-CLICKED && NOT-HELD: MIDDLE
 
 #pragma endregion
+
 	}
 	return 0; 
 }

@@ -187,6 +187,7 @@ void shape::drawEllipse(SDL_Renderer *r, shape t) {
 
 void shape::drawText(SDL_Renderer *r, shape t)
 {
+	TTF_Init();
 	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
 	SDL_Color black = { 0,0,0 };
 

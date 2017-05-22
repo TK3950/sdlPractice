@@ -39,6 +39,12 @@ void path::drawPath(SDL_Renderer *r, color* c, path *p)
 					}
 				}
 
+				else if (p->nodes.at(i)->branch == node::VERTICAL || p->nodes.at(i)->branch == node::HORIZONTAL)
+				{
+					SDL_RenderDrawLine(r, p->nodes.at(i - 1)->posx, p->nodes.at(i - 1)->posy, p->nodes.at(i)->posx, p->nodes.at(i)->posy);
+				}
+
+
 			}
 
 		}

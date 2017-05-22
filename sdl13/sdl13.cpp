@@ -17,8 +17,6 @@ Create multiple rects to serve as menu lines and build your context menu from th
 #include <vector>
 #include <SDL/SDL.h>
 #include "tksdl.h"
-//#include "paths.h"
-#include <sdlttf/SDL_ttf.h>
 #include <windows.h>
 #undef main
 
@@ -55,14 +53,7 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->GetHeight());
 			}
 
-			if (i == shapes.size()-1) // back of vector
-			{
-				shapes.front()->shape::drawShape(re, ac, shapes.at(i)); // draw active shape into renderer
-			}
-			else
-			{
-				shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw other shape into renderer
-			}
+			shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw shape into renderer
 		}
 	}
 
@@ -77,10 +68,10 @@ void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<pat
 		for (unsigned int i = 0; i < paths.size(); ++i) 
 		{
 			paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
-#ifdef _DEBUG2
+#ifdef _DEBUG
 			for (unsigned int j = 0; j < paths.at(i)->nodes.size(); j++)
 			{
-				paths.at(i)->nodes.at(j)->drawNodes(re, ac, paths.at(i)->nodes.at(j));
+				paths.at(i)->nodes.at(j)->drawNodes(re, ac, paths.at(i)->nodes.at(j)); // draw individual nodes
 			}
 #endif
 		}
@@ -91,10 +82,9 @@ void SetNodes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<nod
 {
 	if (!(nodes.empty()))
 	{
-		//
 		for (unsigned int i = 0; i < nodes.size(); ++i)
 		{
-			nodes.front()->node::drawNodes(re, ac, nodes.at(i)); // draw current path into renderer
+			nodes.front()->node::drawNodes(re, ac, nodes.at(i)); // draw current node into renderer
 		}
 	}
 }

@@ -10,7 +10,9 @@ public:
 	enum branchType {
 		NONE = 0,
 		UPPER = 1,
-		LOWER = 2
+		LOWER = 2,
+		VERTICAL = 3,
+		HORIZONTAL = 4
 	};
 
 	node(int x, int y, branchType b) : posx(x), posy(y), branch(b) {}
@@ -28,7 +30,7 @@ public:
 
 class path {
 public:
-	path(unsigned int shape1Id, unsigned int shape2Id, unsigned int node_count) : sourceId(shape2Id), destinationId(shape1Id), validPath(false) {
+	path(unsigned int src, unsigned int dest) : source(src), destination(dest), validPath(false) {
 		
 	}
 	/*
@@ -39,8 +41,8 @@ public:
 
 
 	void drawPath(SDL_Renderer *r, color* c, path *s);
-	unsigned int sourceId;
-	unsigned int destinationId;
+	unsigned int source;
+	unsigned int destination;
 
 	std::vector<node*> nodes;
 	bool validPath;
