@@ -2,6 +2,7 @@
 #ifndef _MENU_H
 #define _MENU_H true
 #include <SDL\SDL.h>
+#include <SDL_ttf.h>
 
 /* We may want to re-examine our blitting process in tksdl.cpp
  * We're going to see about using a .bmp resource file and some text
@@ -35,6 +36,12 @@ class menu
 	int height;
 
 	bool active;
+
+	TTF_Font* Sans;
+	SDL_Color black;
+	SDL_Surface* firstMessage;
+	SDL_Texture* firstTexture;
+
 };
 
 

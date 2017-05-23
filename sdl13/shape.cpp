@@ -185,16 +185,10 @@ void shape::drawEllipse(SDL_Renderer *r) {
 
 }
 
-void shape::drawText(SDL_Renderer *r)
+void shape::drawText(SDL_Renderer *r, SDL_Rect *menu1)
 {
-	TTF_Init();
-	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
-	SDL_Color black = { 0,0,0 };
 
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", black); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
 
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(r, surfaceMessage); //now you can convert it into a texture
-
-	SDL_RenderCopy(r, Message, NULL, NULL);
+	
 
 }

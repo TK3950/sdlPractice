@@ -23,7 +23,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	SecondaryColor = sc;
 	tt = SDL_CreateTextureFromSurface(rr, ss);
 	context = new menu(0, 0, 100, 100);
-
+	msg = SDL_CreateTextureFromSurface(r, this->context->firstMessage); //now you can convert it into a texture
 }
 
 bool isInsideBox(int x, int y, shape sh)
@@ -349,6 +349,8 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 
 void TKSCENE::UpdateScreen()
 {
+
+	SDL_RenderCopy(rr, this->msg, NULL, this->context->box);
 	SDL_RenderCopy(rr, tt, NULL, NULL);
 	SDL_RenderPresent(rr); // show
 }
@@ -439,7 +441,7 @@ int TKSCENE::GetAllEvents()
 		{
 			color* col = new color(0, 0, 0, 0);
 			shape* one = new shape(shape::TK_TEXT, col, 0, 0, 100, 100, 49);
-			one->drawText(rr);
+			one->drawText(rr, context->box);
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F2

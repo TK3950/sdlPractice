@@ -26,6 +26,7 @@ public:
 	color*					PrimaryColor;
 	color*					SecondaryColor;
 	menu*					context;
+	SDL_Texture*			msg;
 
 	void UpdateScreen();
 	int GetAllEvents();

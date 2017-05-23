@@ -10,7 +10,6 @@
 #include "targetver.h"
 #include <math.h>
 #include <SDL/SDL.h>
-#include <SDL_ttf.h>
 #include "color.h"
 #include <stdio.h>
 #include <tchar.h>
@@ -44,7 +43,7 @@ public:
 	void drawRhombus(SDL_Renderer *r);
 	void drawRectangle(SDL_Renderer *r);
 	void drawEllipse(SDL_Renderer *r);
-	void drawText(SDL_Renderer *r);
+	void drawText(SDL_Renderer *r, SDL_Rect *menu1);
 	void drawLine(SDL_Renderer *r);
 	void drawArrow(SDL_Renderer *r);
 	
