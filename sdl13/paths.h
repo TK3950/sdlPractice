@@ -40,7 +40,7 @@ public:
 	*/
 
 
-	void drawPath(SDL_Renderer *r, color* c, path *s);
+	void drawPath(SDL_Renderer *r, color* c);
 	unsigned int source;
 	unsigned int destination;
 

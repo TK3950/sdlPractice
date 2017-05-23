@@ -40,13 +40,13 @@ public:
 		}
 
 
-	void drawShape(SDL_Renderer *r, color *c, shape *s);
-	void drawRhombus(SDL_Renderer *r, shape s);
-	void drawRectangle(SDL_Renderer *r, shape s);
-	void drawEllipse(SDL_Renderer *r, shape s);
-	void drawText(SDL_Renderer *r, shape s);
-	void drawLine(SDL_Renderer *r, shape s);
-	void drawArrow(SDL_Renderer *r, shape s);
+	void drawShape(SDL_Renderer *r, color *c);
+	void drawRhombus(SDL_Renderer *r);
+	void drawRectangle(SDL_Renderer *r);
+	void drawEllipse(SDL_Renderer *r);
+	void drawText(SDL_Renderer *r);
+	void drawLine(SDL_Renderer *r);
+	void drawArrow(SDL_Renderer *r);
 	
 	int GetPosX();
 	int GetPosY();

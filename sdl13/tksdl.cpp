@@ -439,7 +439,7 @@ int TKSCENE::GetAllEvents()
 		{
 			color* col = new color(0, 0, 0, 0);
 			shape* one = new shape(shape::TK_TEXT, col, 0, 0, 100, 100, 49);
-			one->drawText(rr, *one);
+			one->drawText(rr);
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F2
@@ -458,14 +458,14 @@ int TKSCENE::GetAllEvents()
 			{
 				for (unsigned int i = 0; i < shapes.size(); ++i)
 				{
-						if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
+					if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
+					{
+						if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
 						{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
-								{
-										dragMode = true;	// the cursor clicked inside the bounds of the shape
-										selectedShape = i;	// last shape within bounds
-								}
+							dragMode = true;	// the cursor clicked inside the bounds of the shape
+							selectedShape = i;	// last shape within bounds
 						}
+					}
 				}
 			}
 			if (dragMode && !shapes.empty() && abs(ee->motion.xrel) < TK_WINDOW_WIDTH && abs(ee->motion.yrel) < TK_WINDOW_WIDTH)
@@ -561,10 +561,12 @@ int TKSCENE::GetAllEvents()
 			if (context->active)
 			{
 				context->active = false;
+				return TK_CODE_MENU_OFF;
 			}
 			else
 			{
 				context->active = true;
+				return TK_CODE_MENU_ON;
 			}
 			return TK_CODE_MISC;
 		}
@@ -579,15 +581,15 @@ int TKSCENE::GetAllEvents()
 				pathSource = 0;
 				for (unsigned int i = 0; i < shapes.size(); ++i)
 				{
-						if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
+					if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
+					{
+						if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
 						{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
-								{
-										lineMode = true;	// the cursor clicked inside the bounds of the shape
-										selectedShape = i;	// last shape within bounds
-										pathSource = i;
-								}
+							lineMode = true;	// the cursor clicked inside the bounds of the shape
+							selectedShape = i;	// last shape within bounds
+							pathSource = i;
 						}
+					}
 				}
 			}
 
@@ -606,16 +608,16 @@ int TKSCENE::GetAllEvents()
 					{
 						if (ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
 						{
-								if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
+							if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
+							{
+								selectedShape = i;	// last shape within bounds
+								pathDest = i;
+								if (pathSource != pathDest) // if our shapes are not the same
 								{
-										selectedShape = i;	// last shape within bounds
-										pathDest = i;
-										if (pathSource != pathDest) // if our shapes are not the same
-										{
-											sourceIsNotDestination = true; // source shape is not destination shape
-										}
-									
+									sourceIsNotDestination = true; // source shape is not destination shape
 								}
+									
+							}
 						}
 					}
 				}
@@ -624,11 +626,8 @@ int TKSCENE::GetAllEvents()
 				if (sourceIsNotDestination)
 				{
 					// draw with shapes at last and second to last position
-
-					
 					paths.push_back(new path(pathSource, pathDest)); // send a new path to the back of our vector
-					
-					
+
 					if (PathFindHypotenuse(paths.back()) != TK_CODE_PATH_FOUND) // if we don't have a hypot. path
 					{
 						paths.pop_back(); // delete it

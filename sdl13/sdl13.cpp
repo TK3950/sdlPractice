@@ -53,7 +53,7 @@ void SetShapes(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<sh
 				shapes.at(i)->SetPos(shapes.at(i)->GetPosX(), TK_WINDOW_HEIGHT - shapes.at(i)->GetHeight());
 			}
 
-			shapes.front()->shape::drawShape(re, pc, shapes.at(i)); // draw shape into renderer
+			shapes.at(i)->drawShape(re, pc); // draw shape into renderer
 		}
 	}
 
@@ -67,7 +67,7 @@ void SetPaths(SDL_Renderer* re, color* pc, color* sc, color* ac, std::vector<pat
 		//
 		for (unsigned int i = 0; i < paths.size(); ++i) 
 		{
-			paths.front()->path::drawPath(re, pc, paths.at(i)); // draw current path into renderer
+			paths.at(i)->drawPath(re, pc); // draw current path into renderer
 #ifdef _DEBUG
 			for (unsigned int j = 0; j < paths.at(i)->nodes.size(); j++)
 			{
