@@ -26,6 +26,14 @@ class menu
 		menu(int x, int y, int w, int h);
 		~menu();
 		void drawDropDown(SDL_Renderer *r);
+		void updateBoxes();
+
+		enum type {
+			SHAPE_CONTEXT = 0,
+			PATH_CONTEXT = 1,
+			SPACE_CONTEXT = 2,
+
+		};
 
 		SDL_Rect* boxes[10];
 
@@ -34,6 +42,7 @@ class menu
 	int posy;
 	int width;
 	int height;
+	int visibleHeight;
 
 	bool active;
 

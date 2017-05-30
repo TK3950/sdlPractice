@@ -43,7 +43,7 @@ public:
 	void drawRhombus(SDL_Renderer *r);
 	void drawRectangle(SDL_Renderer *r);
 	void drawEllipse(SDL_Renderer *r);
-	void drawText(SDL_Renderer *r, SDL_Rect *menu1);
+	void drawText(SDL_Renderer *r, SDL_Rect *rect);
 	void drawLine(SDL_Renderer *r);
 	void drawArrow(SDL_Renderer *r);
 	

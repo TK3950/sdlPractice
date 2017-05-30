@@ -185,7 +185,7 @@ void shape::drawEllipse(SDL_Renderer *r) {
 
 }
 
-void shape::drawText(SDL_Renderer *r, SDL_Rect *menu1)
+void shape::drawText(SDL_Renderer *r, SDL_Rect *rect)
 {
 
 

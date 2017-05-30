@@ -22,7 +22,7 @@ TKSCENE::TKSCENE(SDL_Renderer* r, SDL_Surface* s, SDL_Window* w, SDL_Event* e, s
 	PrimaryColor = pc;
 	SecondaryColor = sc;
 	tt = SDL_CreateTextureFromSurface(rr, ss);
-	context = new menu(0, 0, 100, 100);
+	context = new menu(0, 0, 200, 260);
 	msg = SDL_CreateTextureFromSurface(r, this->context->firstMessage); //now you can convert it into a texture
 }
 
@@ -349,8 +349,10 @@ int TKSCENE::PathFindHypotenuse(path* pa)
 
 void TKSCENE::UpdateScreen()
 {
-
-	SDL_RenderCopy(rr, this->msg, NULL, this->context->box);
+	if (context->active)
+	{
+		SDL_RenderCopy(rr, this->msg, NULL, this->context->box);
+	}
 	SDL_RenderCopy(rr, tt, NULL, NULL);
 	SDL_RenderPresent(rr); // show
 }
@@ -403,6 +405,7 @@ int TKSCENE::GetAllEvents()
 		{
 			shapes.push_back(new shape(shape::TK_RHOMBUS, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
+			context->active = false;
 			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 1
@@ -410,6 +413,7 @@ int TKSCENE::GetAllEvents()
 		{
 			shapes.push_back(new shape(shape::TK_RECTANGLE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
+			context->active = false;
 			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 2
@@ -417,6 +421,7 @@ int TKSCENE::GetAllEvents()
 		{
 			shapes.push_back(new shape(shape::TK_ELLIPSE, PrimaryColor, 0, 0, 100, 50, shapeIterator));
 			shapeIterator++;
+			context->active = false;
 			return TK_CODE_ADD_SHAPE;
 		}
 		// KEYPRESS: 3
@@ -428,20 +433,19 @@ int TKSCENE::GetAllEvents()
 		if (ee->key.keysym.scancode == SDL_SCANCODE_DELETE && ee->key.state == SDL_PRESSED)
 		{
 			shapes.pop_back();
+			context->active = false;
 			return TK_CODE_DELETE_SHAPE;
 		}
 		// KEYPRESS: DEL
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F5 && ee->key.state == SDL_PRESSED)
 		{
 			RefreshPaths();
+			context->active = false;
 			return TK_CODE_REFRESH_PATHS;
 		}
 		// KEYPRESS: F5
 		if (ee->key.keysym.scancode == SDL_SCANCODE_F2 && ee->key.state == SDL_PRESSED)
 		{
-			color* col = new color(0, 0, 0, 0);
-			shape* one = new shape(shape::TK_TEXT, col, 0, 0, 100, 100, 49);
-			one->drawText(rr, context->box);
 			return TK_CODE_MISC;
 		}
 		// KEYPRESS: F2
@@ -458,14 +462,22 @@ int TKSCENE::GetAllEvents()
 		{
 			if (ee->button.state == SDL_PRESSED)
 			{
-				for (unsigned int i = 0; i < shapes.size(); ++i)
+				if (context->active && ee->motion.y >= context->posy && ee->motion.x >= context->posx && ee->motion.x < context->posx + context->width && ee->motion.y < context->posy + context->height)
 				{
-					if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
+
+				}
+				else
+				{
+					context->active = false;
+					for (unsigned int i = 0; i < shapes.size(); ++i)
 					{
-						if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
+						if (!shapes.empty() && ee->motion.x < shapes.at(i)->GetPosX() + shapes.at(i)->GetWidth() && ee->motion.x > shapes.at(i)->GetPosX())
 						{
-							dragMode = true;	// the cursor clicked inside the bounds of the shape
-							selectedShape = i;	// last shape within bounds
+							if (ee->motion.y < shapes.at(i)->GetPosY() + shapes.at(i)->GetHeight() && ee->motion.y > shapes.at(i)->GetPosY())
+							{
+								dragMode = true;	// the cursor clicked inside the bounds of the shape
+								selectedShape = i;	// last shape within bounds
+							}
 						}
 					}
 				}
@@ -557,20 +569,16 @@ int TKSCENE::GetAllEvents()
 #ifndef RESIZE
 		if (ee->button.button == SDL_BUTTON_RIGHT && ee->button.state == SDL_PRESSED)
 		{
-			context->box->x = ee->motion.x;
-			context->box->y = ee->motion.y;
+			context->posx = ee->motion.x;
+			context->posy = ee->motion.y;
+			context->updateBoxes();
 			
-			if (context->active)
-			{
-				context->active = false;
-				return TK_CODE_MENU_OFF;
-			}
-			else
+			if (!context->active)
 			{
 				context->active = true;
 				return TK_CODE_MENU_ON;
 			}
-			return TK_CODE_MISC;
+			return TK_CODE_MENU_ON;
 		}
 
 #endif
